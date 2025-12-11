@@ -7,6 +7,26 @@ export type NestedThing = {
   nested: NestedThing;
 };
 
+export type TestSchemaWithFieldCalls = {
+  num: number;
+  str: string;
+  fieldCall: {
+    nestedField1: number;
+    nestedField2: {
+      nestedField3: string;
+    };
+  };
+};
+
+export type TestSchemaWithNestedFieldCalls = {
+  outerFieldCall: {
+    innerFieldCall: {
+      deepField: string;
+    };
+    regularField: number;
+  };
+};
+
 export type TestSchema = {
   num: number;
   str: string;

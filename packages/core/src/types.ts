@@ -105,7 +105,7 @@ export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> ext
  * >;  // { apple: "red" }
  * ```
  */
-type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = IfAny<
+type InnerSelect<Schema, Selection extends FieldSelection | FieldSelectionWithArgs | null | undefined> = IfAny<
   Selection,
   never,
   Selection extends null | undefined
@@ -115,10 +115,12 @@ type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = 
     : Schema extends null
     ? InnerSelect<Exclude<Schema, null>, Selection> | null
     : {
-        [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
+        [Key in Exclude<keyof Selection, typeof $args> & keyof Schema]: Selection[Key] extends true
           ? Schema[Key]
-          : Selection[Key] extends FieldSelection
-          ? InnerSelect<Schema[Key], Selection[Key]>
+          : Selection[Key] extends FieldSelection | FieldSelectionWithArgs
+          ? Exclude<keyof Selection[Key], typeof $args> extends never
+            ? Schema[Key]
+            : InnerSelect<Schema[Key], Selection[Key]>
           : never;
       }
 >;
@@ -148,7 +150,9 @@ export type DeepFilterNever<T> = T extends Record<string, unknown>
  * >;  // { apple: "red" }
  * ```
  */
-export type Select<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect<Schema, Selection>>;
+export type Select<Schema, Selection extends FieldSelection | FieldSelectionWithArgs | null | undefined> = DeepFilterNever<
+  InnerSelect<Schema, Selection>
+>;
 
 /** Represents an amount of some currency. Specified as a string so user's aren't tempted to do math on the value. */
 export type CurrencyAmount = string;
@@ -1004,6 +1008,12 @@ export type ViewResult<F extends ViewFunction<any, any>> = Awaited<
   F extends ViewFunctionWithVariables<any, infer Result> ? Result : F extends ViewFunctionWithoutVariables<infer Result> ? Result : never
 >;
 
+/** Symbol key for field arguments in selections */
+export const $args: unique symbol = Symbol.for("gadget/fieldArgs");
+
+/** Field arguments (e.g., pagination, filtering) */
+export type FieldArgs = Record<string, any>;
+
 /**
  * Represents a list of fields selected from a GraphQL API call. Allows nesting, conditional selection.
  * Example: `{ id: true, name: false, richText: { markdown: true, html: false } }`
@@ -1011,3 +1021,9 @@ export type ViewResult<F extends ViewFunction<any, any>> = Awaited<
 export interface FieldSelection {
   [key: string]: boolean | null | undefined | FieldSelection;
 }
+
+/** A field selection that includes field arguments via the $args symbol key */
+export type FieldSelectionWithArgs = {
+  [$args]: FieldArgs;
+  [key: string]: boolean | null | undefined | FieldSelection | FieldSelectionWithArgs;
+};

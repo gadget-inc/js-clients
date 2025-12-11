@@ -1,6 +1,7 @@
 import type { AssertTrue, IsExact } from "conditional-type-checks";
 import type { DeepFilterNever, Select } from "../src/types.js";
-import type { TestSchema } from "./TestSchema.js";
+import { $args } from "../src/types.js";
+import type { TestSchema, TestSchemaWithFieldCalls, TestSchemaWithNestedFieldCalls } from "./TestSchema.js";
 
 describe("Select<>", () => {
   type _SelectingProperties = AssertTrue<IsExact<Select<TestSchema, { num: true }>, { num: number }>>;
@@ -73,6 +74,41 @@ describe("Select<>", () => {
         };
       }
     >
+  >;
+
+  type _fieldCallSelection = Select<
+    TestSchemaWithFieldCalls,
+    { fieldCall: { [$args]: { arg: [1, 2, 3]; limit: 10 }; nestedField1: true; nestedField2: { nestedField3: true } } }
+  >;
+  type _TestSelectingFieldCall = AssertTrue<
+    IsExact<_fieldCallSelection, { fieldCall: { nestedField1: number; nestedField2: { nestedField3: string } } }>
+  >;
+
+  type _simpleFieldCallSelection = Select<
+    { fieldWithArgs: number },
+    {
+      fieldWithArgs: {
+        [$args]: { arg: [1, 2, 3]; limit: 10 };
+      };
+    }
+  >;
+  type _TestSelectingSimpleFieldCall = AssertTrue<IsExact<_simpleFieldCallSelection, { fieldWithArgs: number }>>;
+
+  type _nestedFieldCallSelection = Select<
+    TestSchemaWithNestedFieldCalls,
+    {
+      outerFieldCall: {
+        [$args]: { outerArg: "value" };
+        innerFieldCall: {
+          [$args]: { innerArg: 123 };
+          deepField: { [$args]: { deepArg: "value" } };
+        };
+        regularField: true;
+      };
+    }
+  >;
+  type _TestSelectingNestedFieldCall = AssertTrue<
+    IsExact<_nestedFieldCallSelection, { outerFieldCall: { innerFieldCall: { deepField: string }; regularField: number } }>
   >;
 
   test("true", () => undefined);
