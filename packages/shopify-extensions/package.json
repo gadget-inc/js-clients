@@ -39,7 +39,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/core": ">=0.14.0"
+    "@gadgetinc/core": ">=0.15.1"
   },
   "devDependencies": {
     "@gadgetinc/core": "workspace:*",

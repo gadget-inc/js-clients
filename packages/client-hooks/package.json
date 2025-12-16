@@ -32,7 +32,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/core": ">=0.14.0",
+    "@gadgetinc/core": ">=0.15.1",
     "@urql/core": "^6.0.1"
   },
   "devDependencies": {
