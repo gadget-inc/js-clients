@@ -5,6 +5,6 @@
     "baseUrl": "./",
     "target": "es2019",
     "types": ["jest", "node"],
-    "importHelpers": true
+    "importHelpers": false
   }
 }
