@@ -75,3 +75,5 @@ const AutoRichTextInput = autoInput<AutoRichTextInputProps>((props) => {
 });
 
 export default AutoRichTextInput;
+
+export const MissingMdxEditorErrorMessage = `Failed to load AutoRichTextInput. This component requires "@mdxeditor/editor" in your package.json. See https://docs.gadget.dev/reference/react/auto#autorichtextinput-`;

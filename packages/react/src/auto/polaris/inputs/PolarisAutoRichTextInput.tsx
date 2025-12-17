@@ -6,7 +6,7 @@ import { useStringInputController } from "../../hooks/useStringInputController.j
 import AutoRichTextInput from "../../shared/AutoRichTextInput.js";
 
 /**
- * Prefer using the LazyLoadedMUIAutoRichTextInput.tsx variant of this component to reduce the bundle size by default.
+ * @deprecated Use the LazyLoadedPolarisAutoRichTextInput.tsx variant of this component to reduce the bundle size by default.
  */
 const PolarisAutoRichTextInput = autoInput((props: ComponentProps<typeof AutoRichTextInput>) => {
   const controller = useStringInputController({ field: props.field, control: props.control });

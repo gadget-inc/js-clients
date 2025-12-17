@@ -1,6 +1,6 @@
 import React from "react";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import PolarisAutoRichTextInput from "../../../../src/auto/polaris/inputs/PolarisAutoRichTextInput.js";
+import { PolarisAutoRichTextInput } from "../../../../src/auto/polaris/inputs/LazyLoadedPolarisAutoRichTextInput.js";
 import { useFormContext } from "../../../../src/useActionForm.js";
 import { DebugFormState } from "../../../support/DebugFormState.js";
 import { api } from "../../../support/api.js";
