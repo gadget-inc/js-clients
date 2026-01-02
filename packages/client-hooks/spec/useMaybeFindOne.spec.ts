@@ -38,7 +38,7 @@ describe("useMaybeFindOne", () => {
     expect(state.error).toBeUndefined();
     expect(typeof refetch).toBe("function");
 
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123", undefined);
     expect(adapter.framework.useMemo).toHaveBeenCalled();
     expect(adapter.urql.useQuery).toHaveBeenCalled();
   });
@@ -68,7 +68,7 @@ describe("useMaybeFindOne", () => {
 
     useMaybeFindOne(mockManager, "456");
 
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("456");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("456", undefined);
   });
 
   it("should handle namespaced models", () => {
@@ -96,7 +96,7 @@ describe("useMaybeFindOne", () => {
 
     useMaybeFindOne(mockManager, "123");
 
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123", undefined);
   });
 
   it("should pass pause option", () => {
@@ -127,5 +127,34 @@ describe("useMaybeFindOne", () => {
     const useQueryCall = (adapter.urql.useQuery as jest.Mock).mock.calls[0];
     expect(useQueryCall).toBeDefined();
     expect(useQueryCall[0]).toMatchObject({ pause: true });
+  });
+
+  it("should pass options to plan method", () => {
+    const connection = createMockConnection();
+    const api = createMockApiClient();
+    api.connection = connection;
+    const adapter = createMockAdapter(api, connection);
+
+    createHooks(adapter);
+
+    const mockManager: any = {
+      findOne: {
+        type: "findOne",
+        operationName: "user",
+        modelApiIdentifier: "user",
+        defaultSelection: { id: true, email: true },
+        namespace: [],
+        plan: jest.fn((id, options) => ({
+          query: "query user($id: ID!) { user(id: $id) { id name } }",
+          variables: { id },
+        })),
+        processResult: createMockProcessResult(),
+      },
+    };
+
+    const options = { select: { id: true, name: true } };
+    useMaybeFindOne(mockManager, "789", options);
+
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("789", options);
   });
 });
