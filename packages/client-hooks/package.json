@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/client-hooks",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "files": [
     "README.md",
     "dist/**/*"

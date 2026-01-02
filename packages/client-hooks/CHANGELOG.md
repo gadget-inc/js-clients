@@ -1,5 +1,13 @@
 # @gadgetinc/client-hooks
 
+## 0.1.6
+
+### Patch Changes
+
+- c499b3c: Respect `select` option in `useMaybeFindOne` hook
+
+  Previously, the `select` option was accidentally ignored in the `useMaybeFindOne` hook. It is now respected and will be passed down to the server.
+
 ## 0.1.4
 
 ### Patch Changes
