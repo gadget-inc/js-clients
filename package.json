@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.1",
+    "@changesets/cli": "^2.27.7",
     "@gadget-client/app-with-file-fields": "1.31.0",
     "@gadget-client/app-with-no-user-model": "1.12.0",
     "@gadget-client/bulk-actions-test": "1.139.0",

@@ -39,6 +39,14 @@ Note that it uses the real Gadget app's GraphQL schema to generate types. The UR
 
 See the [`graphql-codegen`](https://the-guild.dev/graphql/codegen/docs/guides/react-vue#writing-graphql-queries) docs for more info.
 
+## Adding a changelog
+
+You can add a new changelog entry for any package with:
+
+```shell
+pnpm changeset add
+```
+
 ## Prereleasing
 
 It can be annoying to work with these packages via `pnpm link` sometimes, so we also support building and releasing the package to a git SHA which can then be installed conventionally in another repo. To push a prerelease, run `pnpm --filter=@gadgetinc/core prerelease`. This will:
@@ -64,15 +72,21 @@ You can then view the built test bundle size reports at `packages/test-bundles/d
 
 Releasing is done automatically via [our release workflow](.github/workflows/release.yml). Any commits to the main branch that changes one of our `packages/**/package.json` versions will automatically be published.
 
+We use `changeset` for changelog tracking. To update all the `package.json`s with the latest version, run:
+
+```shell
+pnpm changeset version
+```
+
 If you need to release manually for some reason you can do the following
 
-```
+```shell
 pnpm --filter=@gadgetinc/core publish --access=public --no-git-tag-version
 ```
 
 or
 
-```
+```shell
 pnpm --filter=@gadgetinc/react publish --access=public --no-git-tag-version
 ```
 

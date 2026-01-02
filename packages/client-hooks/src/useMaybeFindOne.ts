@@ -9,7 +9,7 @@ createHookStub("useMaybeFindOne", (adapter: RuntimeAdapter, coreHooks: CoreHooks
   useMaybeFindOneImpl = (manager, id, options) => {
     const memoizedOptions = coreHooks.useStructuralMemo(options);
     const plan = adapter.framework.useMemo(() => {
-      return manager.findOne.plan(id);
+      return manager.findOne.plan(id, memoizedOptions);
     }, [manager, id, memoizedOptions]);
 
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
