@@ -135,12 +135,12 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       <>
         <TableHead key={column.identifier} className={`${stickyClass} bg-${isRowHovered ? "muted" : "background"}`}>
           <div className={`flex flex-row items-center gap-2 z-10 `}>
-            {column.sortable ? (
+            {column.sortable && column.field ? (
               <Button
                 variant="ghost"
                 size="sm"
                 className="cursor-pointer"
-                onClick={() => (column.type === "CustomRenderer" ? undefined : sort.handleColumnSort(column.field))}
+                onClick={() => sort.handleColumnSort(column.field!)}
                 {...hoverProps}
               >
                 {ColumnHeaderLabel}

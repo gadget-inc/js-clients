@@ -152,12 +152,27 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
   for (const [i, targetColumn] of spec.targetColumns.entries()) {
     if (isCustomCellColumn(targetColumn)) {
       const identifier = crypto.randomUUID();
+
+      // If field is provided, determine sortability based on field metadata
+      let sortable = false;
+      if (targetColumn.field) {
+        const fieldMetadata = maybeGetFieldMetadataByColumnPath(spec.fieldMetadataTree, targetColumn.field);
+        if (fieldMetadata) {
+          sortable = isColumnSortable({
+            fieldMetadata: { ...fieldMetadata, apiIdentifier: targetColumn.field },
+            sortable: targetColumn.sortable,
+            isRelationshipField: isRelationshipField(fieldMetadata),
+          });
+        }
+      }
+
       columns.push({
         identifier,
         render: targetColumn.render,
         header: targetColumn.header,
         type: "CustomRenderer",
-        sortable: false,
+        sortable,
+        field: targetColumn.field,
         style: targetColumn.style,
       });
 
