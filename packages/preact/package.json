@@ -39,7 +39,7 @@
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/preact": "^3.2.4",
     "@gadgetinc/core": "workspace:*",
-    "preact": "^10.27.2"
+    "preact": "^10.27.3"
   },
   "peerDependencies": {
     "preact": "^10.0.0"
