@@ -135,7 +135,7 @@
     "graphql": "^16.8.1",
     "graphql-ws": "^5.13.1",
     "libnpmpack": "^7.0.4",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "lucide-react": "^0.471.0",
     "postcss": "^8.4.49",
     "react": "^19.1.1",
