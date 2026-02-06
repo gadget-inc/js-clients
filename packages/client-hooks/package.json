@@ -1,14 +1,17 @@
 {
   "name": "@gadgetinc/client-hooks",
   "version": "0.1.7",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/client-hooks",
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "source": "src/index.ts",
   "files": [
     "README.md",
     "dist/**/*"
   ],
-  "license": "MIT",
-  "repository": "github:gadget-inc/js-clients",
-  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/client-hooks",
   "type": "module",
+  "sideEffects": false,
+  "main": "dist/cjs/index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -17,9 +20,6 @@
       "default": "./dist/esm/index.js"
     }
   },
-  "source": "src/index.ts",
-  "main": "dist/cjs/index.js",
-  "sideEffects": false,
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",

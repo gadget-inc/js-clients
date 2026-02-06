@@ -19,11 +19,13 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
   if (signOutActionApiIdentifier && (api as any).user[signOutActionApiIdentifier]) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // oxlint-disable-next-line react/rules-of-hooks -- else branch always throws, so hook order is consistent
     const [{ error }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier], { suspense: true });
 
     if (error) throw error;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // oxlint-disable-next-line react/rules-of-hooks -- else branch always throws, so hook order is consistent
     return useCallback(async () => {
       if (!user) throw new Error("attempting to sign out when the user is not signed in");
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

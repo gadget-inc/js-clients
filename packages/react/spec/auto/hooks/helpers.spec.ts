@@ -532,8 +532,8 @@ const getRelationshipFieldMetadata = (props: {
         relationshipType === GadgetFieldType.HasOne
           ? "GadgetHasOneConfig"
           : relationshipType === GadgetFieldType.HasMany
-          ? "GadgetHasManyConfig"
-          : "GadgetBelongsToConfig",
+            ? "GadgetHasManyConfig"
+            : "GadgetBelongsToConfig",
       relatedModel: {
         fields: relatedModelFields,
         defaultDisplayField,

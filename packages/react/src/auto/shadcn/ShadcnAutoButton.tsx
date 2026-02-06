@@ -13,7 +13,7 @@ export const makeAutoButton =
   <
     GivenOptions extends OptionsType,
     SchemaT,
-    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   >(
     props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ButtonProps
   ) => {

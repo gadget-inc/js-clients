@@ -42,7 +42,10 @@ export class GadgetClientError extends Error {
  * A Gadget API error with an `code` and `message` describing the error. Most often these errors are caused by invalid input data or by misconfigured Gadget models. Consult the documentation for the specific `code` to learn more.
  **/
 export class GadgetOperationError extends Error {
-  constructor(incomingMessage: string, readonly code: string) {
+  constructor(
+    incomingMessage: string,
+    readonly code: string
+  ) {
     super(incomingMessage.startsWith("GGT_") ? incomingMessage : `${code}: ${incomingMessage}`);
   }
 }
@@ -546,9 +549,9 @@ const checkEquality = (a: any, b: any, refs: any[]): boolean => {
       return true;
     }
     case "ArrayBuffer":
-      (a = new Uint8Array(a)), (b = new Uint8Array(b)); // fall through to be handled as an Array
+      ((a = new Uint8Array(a)), (b = new Uint8Array(b))); // fall through to be handled as an Array
     case "DataView":
-      (a = new Uint8Array(a.buffer)), (b = new Uint8Array(b.buffer)); // fall through to be handled as an Array
+      ((a = new Uint8Array(a.buffer)), (b = new Uint8Array(b.buffer))); // fall through to be handled as an Array
     case "Float32Array":
     case "Float64Array":
     case "Int8Array":

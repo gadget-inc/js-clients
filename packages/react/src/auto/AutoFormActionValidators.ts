@@ -31,7 +31,7 @@ export const validateTriggersFromApiClient = (action: ActionFunction<any, any, a
 export const validateAutoFormProps = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
@@ -63,8 +63,8 @@ export const validateTriggersFromMetadata = (metadata?: ModelWithOneActionMetada
     (metadata.__typename === "GadgetGlobalAction"
       ? metadata.triggers
       : metadata.__typename === "GadgetModel"
-      ? metadata.action.triggers
-      : []) ?? [];
+        ? metadata.action.triggers
+        : []) ?? [];
 
   const hasApiTrigger = triggersAsArray.some((trigger) => trigger.specID === GadgetApiTriggerSpecId);
   if (!hasApiTrigger) {

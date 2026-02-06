@@ -6,21 +6,22 @@ import type { ActionFunctionOptions, DefaultSelection, Select } from "./types.js
 
 export type BackgroundActionResultData<
   F extends ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>,
-  Selection
-> = F extends ActionFunction<any, any, any, any, any>
-  ? F["hasReturnType"] extends true
-    ? any
-    : GadgetRecord<
-        Select<
-          Exclude<F["schemaType"], null | undefined>,
-          DefaultSelection<
-            F["selectionType"],
-            Selection extends { select?: F["selectionType"] | null | undefined } ? Selection : never,
-            F["defaultSelection"]
+  Selection,
+> =
+  F extends ActionFunction<any, any, any, any, any>
+    ? F["hasReturnType"] extends true
+      ? any
+      : GadgetRecord<
+          Select<
+            Exclude<F["schemaType"], null | undefined>,
+            DefaultSelection<
+              F["selectionType"],
+              Selection extends { select?: F["selectionType"] | null | undefined } ? Selection : never,
+              F["defaultSelection"]
+            >
           >
         >
-      >
-  : any;
+    : any;
 
 export type BackgroundActionResult<Data = any> = {
   id: string;
@@ -31,9 +32,13 @@ export type BackgroundActionResult<Data = any> = {
 /** Represents a handle to a background action which has been enqueued */
 export class BackgroundActionHandle<
   SchemaT,
-  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>
+  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>,
 > {
-  constructor(readonly connection: GadgetConnection, readonly action: Action, readonly id: string) {}
+  constructor(
+    readonly connection: GadgetConnection,
+    readonly action: Action,
+    readonly id: string
+  ) {}
 
   /** Wait for this background action to complete and return the result. */
   async result<Options extends ActionFunctionOptions<Action>, ResultData = BackgroundActionResultData<Action, Options>>(options?: Options) {

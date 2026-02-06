@@ -123,7 +123,7 @@ export interface ReadHookState<Data = any, Variables extends AnyVariables = Reco
  **/
 export declare type ReadHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = [
   ReadHookState<Data, Variables>,
-  (opts?: Partial<OperationContext>) => void
+  (opts?: Partial<OperationContext>) => void,
 ];
 
 export type RequiredKeysOf<BaseType> = Exclude<
@@ -149,18 +149,19 @@ export interface ActionHookState<Data = any, Variables extends AnyVariables = Re
  * The return value of a `useAction`, `useGlobalAction`, `useBulkAction` etc hook.
  * Includes the data result object and a function for running the mutation.
  **/
-export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = RequiredKeysOf<Variables> extends never
-  ? ActionHookResultWithOptionalCallbackVariables<Data, Variables>
-  : ActionHookResultWithRequiredCallbackVariables<Data, Variables>;
+export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> =
+  RequiredKeysOf<Variables> extends never
+    ? ActionHookResultWithOptionalCallbackVariables<Data, Variables>
+    : ActionHookResultWithRequiredCallbackVariables<Data, Variables>;
 
 export type ActionHookResultWithOptionalCallbackVariables<Data = any, Variables extends AnyVariables = AnyVariables> = [
   ActionHookState<Data, Variables>,
-  (variables?: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+  (variables?: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>,
 ];
 
 export type ActionHookResultWithRequiredCallbackVariables<Data = any, Variables extends AnyVariables = AnyVariables> = [
   ActionHookState<Data, Variables>,
-  (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+  (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>,
 ];
 
 export type UseGadgetQueryArgs<Variables extends AnyVariables, Data = any> = UseQueryArgs<Variables, Data> & {
@@ -218,22 +219,22 @@ export type EnqueueHookState<Action extends AnyActionFunction> = Action extends 
       operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
     }
   : Action extends ActionFunctionMetadata<any, any, any, any, any, false>
-  ? {
-      fetching: boolean;
-      stale: boolean;
-      handle: AnyBackgroundActionHandle<Action["schemaType"], Action> | null;
-      error?: AnyErrorWrapper;
-      extensions?: Record<string, any>;
-      operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
-    }
-  : {
-      fetching: boolean;
-      stale: boolean;
-      handle: AnyBackgroundActionHandle<unknown, Action> | null;
-      error?: AnyErrorWrapper;
-      extensions?: Record<string, any>;
-      operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
-    };
+    ? {
+        fetching: boolean;
+        stale: boolean;
+        handle: AnyBackgroundActionHandle<Action["schemaType"], Action> | null;
+        error?: AnyErrorWrapper;
+        extensions?: Record<string, any>;
+        operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+      }
+    : {
+        fetching: boolean;
+        stale: boolean;
+        handle: AnyBackgroundActionHandle<unknown, Action> | null;
+        error?: AnyErrorWrapper;
+        extensions?: Record<string, any>;
+        operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+      };
 
 /**
  * The return value of a `useEnqueue` hook.
@@ -241,25 +242,24 @@ export type EnqueueHookState<Action extends AnyActionFunction> = Action extends 
  *  - the result object, with the keys like `handle`, `fetching`, and `error`
  *  - and a function for running the enqueue mutation.
  **/
-export type EnqueueHookResult<Action extends AnyActionFunction> = RequiredKeysOf<
-  Exclude<Action["variablesType"], null | undefined>
-> extends never
-  ? [
-      EnqueueHookState<Action>,
-      (
-        variables?: Action["variablesType"],
-        backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
-        context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<Action>>
-    ]
-  : [
-      EnqueueHookState<Action>,
-      (
-        variables: Action["variablesType"],
-        backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
-        context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<Action>>
-    ];
+export type EnqueueHookResult<Action extends AnyActionFunction> =
+  RequiredKeysOf<Exclude<Action["variablesType"], null | undefined>> extends never
+    ? [
+        EnqueueHookState<Action>,
+        (
+          variables?: Action["variablesType"],
+          backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
+          context?: Partial<OperationContext>
+        ) => Promise<EnqueueHookState<Action>>,
+      ]
+    : [
+        EnqueueHookState<Action>,
+        (
+          variables: Action["variablesType"],
+          backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
+          context?: Partial<OperationContext>
+        ) => Promise<EnqueueHookState<Action>>,
+      ];
 
 /**
  * Hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.
@@ -295,7 +295,7 @@ export type UseAction = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends F["optionsType"]
+  Options extends F["optionsType"],
 >(
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
@@ -339,7 +339,7 @@ export type UseBulkAction = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends BulkActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends F["optionsType"]
+  Options extends F["optionsType"],
 >(
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
@@ -484,7 +484,7 @@ export type UseFindBy = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   finder: F,
   value: string,
@@ -523,7 +523,7 @@ export type UseFindFirst = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
@@ -561,7 +561,7 @@ export type UseFindMany = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
@@ -599,7 +599,7 @@ export type UseFindOne = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { findOne: F },
   id: string,
@@ -638,7 +638,7 @@ export type UseGet = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends GetFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { get: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
@@ -700,7 +700,7 @@ export type UseMaybeFindFirst = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
@@ -738,7 +738,7 @@ export type UseMaybeFindOne = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  const Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions,
 >(
   manager: { findOne: F },
   id: string,
@@ -825,7 +825,9 @@ export interface UseView {
    * }
    * ```
    */
-  (gellyQuery: string, variables?: Record<string, unknown>, options?: Omit<ReadOperationOptions, "live">): ReadHookResult<
-    ViewResult<ViewFunction<unknown, unknown>>
-  >;
+  (
+    gellyQuery: string,
+    variables?: Record<string, unknown>,
+    options?: Omit<ReadOperationOptions, "live">
+  ): ReadHookResult<ViewResult<ViewFunction<unknown, unknown>>>;
 }

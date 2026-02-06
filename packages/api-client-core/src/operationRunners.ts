@@ -431,7 +431,7 @@ export const backgroundActionResultRunner = async <
   SchemaT,
   Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>,
   Options extends ActionFunctionOptions<Action>,
-  ResultData = BackgroundActionResultData<Action, Options>
+  ResultData = BackgroundActionResultData<Action, Options>,
 >(
   connection: GadgetConnection,
   id: string,

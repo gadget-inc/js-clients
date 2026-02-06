@@ -27,11 +27,17 @@ export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionO
     plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;
     processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any> | null;
     processResult: {
-      <SchemaT, Action extends AnyBulkActionFunction>(action: Action, result: FunctionResult): {
+      <SchemaT, Action extends AnyBulkActionFunction>(
+        action: Action,
+        result: FunctionResult
+      ): {
         handles: AnyBackgroundActionHandle<SchemaT, Action>[] | null;
         error: AnyErrorWrapper | undefined;
       };
-      <SchemaT, Action extends AnyActionFunction>(action: Action, result: FunctionResult): {
+      <SchemaT, Action extends AnyActionFunction>(
+        action: Action,
+        result: FunctionResult
+      ): {
         handle: AnyBackgroundActionHandle<SchemaT, Action> | null;
         error: AnyErrorWrapper | undefined;
       };

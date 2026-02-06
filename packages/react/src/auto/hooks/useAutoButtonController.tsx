@@ -7,7 +7,7 @@ import { isModelActionMetadata, useActionMetadata } from "../../metadata.js";
 export type AutoButtonProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 > = {
   /** Which action this button will run */
   action: ActionFunc;
@@ -32,7 +32,7 @@ export type AutoButtonProps<
 export const useAutoButtonController = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc>
 ) => {

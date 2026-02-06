@@ -58,7 +58,7 @@ export type PolarisAutoTableProps<
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 > = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options> & {
   /**
    * Condenses the table to avoid horizontal scrolling. Defaults to `false`.
@@ -88,7 +88,7 @@ export const PolarisAutoTable = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: PolarisAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
@@ -105,7 +105,7 @@ const PolarisAutoTableComponent = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: PolarisAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
@@ -259,7 +259,7 @@ const PolarisAutoTableComponent = <
           itemCount={
             error
               ? 1 // Don't show the empty state if there's are no errors.
-              : rows?.length ?? 0
+              : (rows?.length ?? 0)
           }
           pagination={
             paginate

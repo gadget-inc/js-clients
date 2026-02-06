@@ -70,7 +70,7 @@ export type AutoFormProps<
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   ExtraFormVariables extends FieldValues = Record<string, unknown>,
-  DefaultValues = Partial<ActionFunc["variablesType"]> & ExtraFormVariables
+  DefaultValues = Partial<ActionFunc["variablesType"]> & ExtraFormVariables,
 > = (AutoFormPropsWithChildren | AutoFormPropsWithoutChildren) & {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -112,30 +112,30 @@ export type AutoFormProps<
             record: AutoFormRecordType<ActionFunc>;
           }
     : ActionFunc extends AnyUpsertAction
-    ?
-        | {
-            /**
-             * The record identifier to run this action on, if it already exists.
-             * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
-             **/
-            findBy?: RecordIdentifier;
-            /** If a findBy is provided, you can't pass a record option */
-            record?: never;
-          }
-        | {
-            /**
-             * If a record is provided, you can't pass a findBy option
-             **/
-            findBy?: never;
-            /** A record for this form to act on; will be merged with the default values */
-            record?: AutoFormRecordType<ActionFunc>;
-          }
-    : {
-        /** This action doesn't run against existing records, so you can't pass a findBy option */
-        findBy?: never;
-        /** This action doesn't operate with a record, so you can't pass a record option */
-        record?: never;
-      });
+      ?
+          | {
+              /**
+               * The record identifier to run this action on, if it already exists.
+               * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+               **/
+              findBy?: RecordIdentifier;
+              /** If a findBy is provided, you can't pass a record option */
+              record?: never;
+            }
+          | {
+              /**
+               * If a record is provided, you can't pass a findBy option
+               **/
+              findBy?: never;
+              /** A record for this form to act on; will be merged with the default values */
+              record?: AutoFormRecordType<ActionFunc>;
+            }
+      : {
+          /** This action doesn't run against existing records, so you can't pass a findBy option */
+          findBy?: never;
+          /** This action doesn't operate with a record, so you can't pass a record option */
+          record?: never;
+        });
 
 /**
  * React hook for getting the validation schema for a list of fields
@@ -186,7 +186,7 @@ export const useFormFields = (
         ({
           path,
           metadata: field,
-        } as const)
+        }) as const
     );
 
     const includedObjectFields = objectFields.flatMap((objectField) =>
@@ -198,7 +198,7 @@ export const useFormFields = (
           ({
             path: `${objectField.apiIdentifier}.${innerPath}`,
             metadata: innerField,
-          } as const)
+          }) as const
       )
     );
 
@@ -311,7 +311,7 @@ const validateFormFieldApiIdentifierUniqueness = (
 export const useAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ): {
@@ -411,8 +411,8 @@ export const useAutoForm = <
             id: record
               ? record.id
               : typeof findBy === "string"
-              ? findBy // ID is given directly
-              : undefined, // Set by the retrieved existing record if object based findBy value
+                ? findBy // ID is given directly
+                : undefined, // Set by the retrieved existing record if object based findBy value
           })
     );
   }, [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, isUpsertWithFindBy, findBy]);
@@ -673,7 +673,7 @@ const extractPathsFromChildren = (props: {
 
         if (props.recordLabel) {
           aggregatePathsFromRecordLabel(props.recordLabel, () =>
-            newCurrentPath ? getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? [] : []
+            newCurrentPath ? (getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? []) : []
           ).forEach((path) => paths.add(`${field}.${path}`));
         }
       }
@@ -744,7 +744,7 @@ const validateFindBy = (params: {
 };
 
 const getRootFieldsFromMetadata = (metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined | null) => {
-  return metadata && "fields" in metadata ? (metadata?.fields as FieldMetadata[]) ?? [] : [];
+  return metadata && "fields" in metadata ? ((metadata?.fields as FieldMetadata[]) ?? []) : [];
 };
 
 const getAllRelatedModelFieldApiIdentifiers = (props: {

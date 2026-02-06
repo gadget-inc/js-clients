@@ -15,7 +15,7 @@ export function useUser<
   UserSchemaT,
   Client extends ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
   Options extends Client["user"]["findMany"]["optionsType"] & ReadOperationOptions,
-  ClientType extends Client | undefined
+  ClientType extends Client | undefined,
 >(
   client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["user"]["findMany"]["optionsType"] & ReadOperationOptions>

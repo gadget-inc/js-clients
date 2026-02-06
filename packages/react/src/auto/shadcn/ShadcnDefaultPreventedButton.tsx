@@ -10,7 +10,7 @@ type FormContainerT = React.ForwardRefExoticComponent<React.FormHTMLAttributes<H
 export type ShadcnAutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 > = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<FormContainerT>, "action" | "defaultValue">;
 
 export const makeDefaultPreventedButton = <Elements extends Pick<ShadcnElements, "Button">>(elements: Elements) => {

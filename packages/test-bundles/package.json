@@ -2,8 +2,8 @@
   "name": "test-bundles",
   "version": "0.1.0",
   "private": true,
-  "source": "src/index.ts",
   "repository": "github:gadget-inc/js-clients",
+  "source": "src/index.ts",
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",

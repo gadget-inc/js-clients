@@ -29,7 +29,7 @@ export const makeShadcnAutoSubmit = ({ Button }: Pick<ShadcnElements, "Button">)
           props.onClick?.(e);
         }}
       >
-        {isSubmitting ? <LoaderIcon className="h-4 w-4 animate-spin" /> : props.children ?? "Submit"}
+        {isSubmitting ? <LoaderIcon className="h-4 w-4 animate-spin" /> : (props.children ?? "Submit")}
       </Button>
     );
   }

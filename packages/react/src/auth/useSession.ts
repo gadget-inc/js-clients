@@ -29,7 +29,7 @@ export function useSession<
   UserSchemaT,
   Client extends ClientWithSessionAndMaybeUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
   Options extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions,
-  ClientType extends Client | undefined
+  ClientType extends Client | undefined,
 >(
   client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions>
@@ -67,6 +67,7 @@ export function useSession<
       ...(restOptions ?? {}),
     };
 
+    // oxlint-disable-next-line react/rules-of-hooks -- else branch always throws, so hook order is consistent
     const [{ data: session, error }] = useGet(api.currentSession, opts);
 
     if (error) throw error;

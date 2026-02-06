@@ -16,8 +16,8 @@ export const makeShadcnAutoNumberInput = ({ Input, Label }: Pick<ShadcnElements,
       metadata.configuration.__typename === "GadgetNumberConfig" && metadata.configuration.decimals && metadata.configuration.decimals > 0
         ? getStepFromNumberOfDecimals(metadata.configuration.decimals)
         : value
-        ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
-        : 1;
+          ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
+          : 1;
 
     return <AutoStringInput {...props} step={step} type={"number"} />;
   }

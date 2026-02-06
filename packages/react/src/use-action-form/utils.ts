@@ -364,10 +364,13 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
         ? Object.entries(fieldRelationships)
             .filter(([_key, value]) => value.type === "BelongsTo")
-            .reduce((obj, [key, value]) => {
-              obj[key] = value;
-              return obj;
-            }, {} as Record<string, { type: string; model: string }>)
+            .reduce(
+              (obj, [key, value]) => {
+                obj[key] = value;
+                return obj;
+              },
+              {} as Record<string, { type: string; model: string }>
+            )
         : null;
 
       for (const key of Object.keys(belongsToRelationships ?? {})) {
@@ -513,8 +516,8 @@ const getHasOneGraphqlApiInput = (props: { input: any; result: any; defaultValue
       !__replace || Object.keys(nonUnlinkParams).length === 0
         ? {}
         : "id" in nonUnlinkParams && nonUnlinkParams.id
-        ? { update: nonUnlinkParams }
-        : { create: nonUnlinkParams };
+          ? { update: nonUnlinkParams }
+          : { create: nonUnlinkParams };
 
     return { _unlink, ...additionalActions };
   }

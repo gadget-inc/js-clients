@@ -31,7 +31,7 @@ createHookStub("useView", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
         // if the view exports the typenames it references, add them to the context so urql will refresh the view when mutations are made against these typenames
         additionalTypenames: [
           ...(options?.context?.additionalTypenames ?? []),
-          ...(typeof view == "string" ? [] : view.referencedTypenames ?? []),
+          ...(typeof view == "string" ? [] : (view.referencedTypenames ?? [])),
         ],
       },
     });

@@ -169,7 +169,7 @@ export const SubmitResultBanner = (props: any) => {
 export const SelectableDesignSystemAutoFormStory = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
@@ -186,7 +186,7 @@ export const SelectableDesignSystemAutoFormStory = <
 const PolarisAutoFormStory = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
@@ -213,7 +213,7 @@ const PolarisAutoFormStory = <
 const ShadcnAutoFormStory = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {

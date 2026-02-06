@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 140,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "ignorePatterns": [
+    "packages/*/dist",
+    "packages/core/testing/package.json",
+    "packages/react/auto/polaris/package.json",
+    "packages/react/auto/shadcn/package.json",
+    "packages/shopify-extensions/preact/package.json",
+    "packages/shopify-extensions/react/package.json"
+  ]
+}

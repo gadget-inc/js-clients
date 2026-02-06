@@ -110,9 +110,11 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
 export type ViewFunction<VariablesT, ResultT> = ViewFunctionWithoutVariables<ResultT> | ViewFunctionWithVariables<VariablesT, ResultT>;
 
 export interface ActionWithIdAndVariables<OptionsT, VariablesT> {
-  <Options extends OptionsT>(id: string, variables: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>):
-    | AsyncRecord<any>
-    | Promise<void>;
+  <Options extends OptionsT>(
+    id: string,
+    variables: VariablesT,
+    options?: LimitToKnownKeys<Options, OptionsT>
+  ): AsyncRecord<any> | Promise<void>;
 }
 
 export interface ActionWithNoIdAndVariables<OptionsT, VariablesT> {
