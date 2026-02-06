@@ -14,7 +14,9 @@ describe("useFindMany", () => {
 
   // all these functions are typechecked but never run to avoid actually making API calls
   const _TestFindManyReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, refresh] = useFindMany(relatedProductsApi.user, { select: { id: true, email: true } });
+    const [{ data, fetching, error }, refresh] = useFindMany(relatedProductsApi.user, {
+      select: { id: true, email: true },
+    });
 
     assert<IsExact<typeof fetching, boolean>>(true);
     assert<IsExact<typeof data, undefined | GadgetRecordList<{ id: string; email: string | null }>>>(true);
@@ -44,6 +46,56 @@ describe("useFindMany", () => {
       data[0].id;
       data[0].name;
     }
+  };
+
+  const _TestFindManyWithSelectAndSort = () => {
+    const [{ data }] = useFindMany(relatedProductsApi.user, {
+      select: { id: true, email: true },
+      sort: { createdAt: "Descending" },
+    });
+
+    assert<IsExact<typeof data, undefined | GadgetRecordList<{ id: string; email: string | null }>>>(true);
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+  };
+
+  const _TestFindManyWithSortOnly = () => {
+    const [{ data }] = useFindMany(relatedProductsApi.user, {
+      sort: { createdAt: "Descending" },
+    });
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+  };
+
+  const _TestFindManyRejectsInvalidSelectFields = () => {
+    useFindMany(relatedProductsApi.user, {
+      // @ts-expect-error - notAField is not a valid field on the user model
+      select: { id: true, notAField: true },
+    });
+  };
+
+  const _TestFindManyRejectsInvalidSelectFieldsWithSort = () => {
+    useFindMany(relatedProductsApi.user, {
+      // @ts-expect-error - notAField is not a valid field on the user model
+      select: { id: true, notAField: true },
+      sort: { createdAt: "Descending" },
+    });
+  };
+
+  const _TestFindManyWithSelectAndReadOperationOptions = () => {
+    const [{ data }] = useFindMany(relatedProductsApi.user, {
+      select: { id: true },
+      suspense: true,
+      pause: false,
+    });
+
+    assert<IsExact<typeof data, undefined | GadgetRecordList<{ id: string }>>>(true);
   };
 
   it("should initialize the hook correctly", () => {
