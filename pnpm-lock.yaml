@@ -292,7 +292,7 @@ importers:
   packages/preact:
     dependencies:
       '@gadgetinc/client-hooks':
-        specifier: ^0.1.5
+        specifier: ^0.1.7
         version: link:../client-hooks
       '@gadgetinc/core':
         specifier: workspace:*
@@ -320,7 +320,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(graphql@16.8.1)
       '@gadgetinc/client-hooks':
-        specifier: ^0.1.5
+        specifier: ^0.1.7
         version: link:../client-hooks
       '@gadgetinc/core':
         specifier: workspace:*
