@@ -5,7 +5,7 @@
     "jsx": "react",
     "baseUrl": "./",
     "target": "es2020",
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "@shopify/polaris-types"],
     "importHelpers": true
   }
 }

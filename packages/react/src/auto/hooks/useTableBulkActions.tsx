@@ -42,7 +42,10 @@ export const useTableBulkActions = (props: {
   }
 
   const [selectedModelActionDetails, setSelectedModelActionDetails] = React.useState<ModelActionDetails | undefined>(undefined);
-  const gadgetModelActionsAsBulkActionOptions = getModelActionsForTableAsBulkActionOptions({ model, setSelectedModelActionDetails });
+  const gadgetModelActionsAsBulkActionOptions = getModelActionsForTableAsBulkActionOptions({
+    model,
+    setSelectedModelActionDetails,
+  });
 
   const bulkActionOptions: BulkActionOption[] = useMemo(() => {
     if (excludeActions) {
@@ -223,10 +226,13 @@ export const useAutoTableBulkActionModal = (props: AutoBulkActionModal) => {
 
   const modalTitle = useMemo(() => humanizeCamelCase(actionName ?? "").replace("Bulk ", ""), [actionName]);
 
-  const closeAndClear = useCallback(() => {
+  const close = useCallback(() => {
     setShowModal(false);
-    clearSelection();
   }, [setShowModal, clearSelection]);
+  const closeAndClear = useCallback(() => {
+    close();
+    clearSelection();
+  }, [close, clearSelection]);
 
   return {
     showModal,
@@ -234,6 +240,7 @@ export const useAutoTableBulkActionModal = (props: AutoBulkActionModal) => {
     actionIsLoaded,
     isBulkGadgetAction,
     modalTitle,
+    close,
     closeAndClear,
   };
 };

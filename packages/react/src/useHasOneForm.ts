@@ -9,7 +9,10 @@ export const useHasOneForm = (props: AutoRelationshipFormProps) => {
   useRequiredChildComponentsValidator(props, "AutoHasOneForm");
   const { record, relatedModelOptions } = useHasOneController(props);
 
-  const form = useSingleRelatedRecordRelationshipForm({ ...props, relationshipController: { record, relatedModelOptions } });
+  const form = useSingleRelatedRecordRelationshipForm({
+    ...props,
+    relationshipController: { record, relatedModelOptions },
+  });
 
   const { isEditing, setIsEditing, setActionsOpen, setValue, path, metaDataPathPrefix } = form;
   const { fields, model } = useAutoFormMetadata();

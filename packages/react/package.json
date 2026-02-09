@@ -36,6 +36,11 @@
       "require": "./dist/cjs/auto/polaris/index.js",
       "default": "./dist/esm/auto/polaris/index.js"
     },
+    "./auto/polaris-wc": {
+      "import": "./dist/esm/auto/polaris-wc/index.js",
+      "require": "./dist/cjs/auto/polaris-wc/index.js",
+      "default": "./dist/esm/auto/polaris-wc/index.js"
+    },
     "./auto/shadcn": {
       "import": "./dist/esm/auto/shadcn/index.js",
       "require": "./dist/cjs/auto/shadcn/index.js",
@@ -49,7 +54,7 @@
     "typecheck": "pnpm run typecheck:main && pnpm run typecheck:cypress",
     "clean": "rimraf dist/ auto/ *.tsbuildinfo **/*.tsbuildinfo cypress/*.tsbuildinfo",
     "build": "pnpm clean && pnpm setup-build && tsc -b tsconfig.cjs.json tsconfig.esm.json && pnpm copy",
-    "setup-build": "mkdir -p dist/cjs dist/esm auto/polaris auto/shadcn && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"main\": \"../../dist/cjs/auto/polaris/index.js\"}' > auto/polaris/package.json && echo '{\"main\": \"../../dist/cjs/auto/shadcn/index.js\"}' > auto/shadcn/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "setup-build": "mkdir -p dist/cjs dist/esm auto/polaris auto/polaris-wc auto/shadcn && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"main\": \"../../dist/cjs/auto/polaris/index.js\"}' > auto/polaris/package.json && echo '{\"main\": \"../../dist/cjs/auto/polaris-wc/index.js\"}' > auto/polaris-wc/package.json && echo '{\"main\": \"../../dist/cjs/auto/shadcn/index.js\"}' > auto/shadcn/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
     "copy": "copyfiles -u 1 src/**/*.css dist/esm && copyfiles -u 1 src/**/*.css dist/cjs && copyfiles -u 1 src/**/*.css.d.ts dist/esm && copyfiles -u 1 src/**/*.css.cjs dist/cjs && copyfiles -u 1 src/**/*.css.d.cts dist/cjs && cp src/auto/shadcn/index.css auto/shadcn.css && cp src/auto/shadcn/index.css.d.ts auto/shadcn.css.d.ts",
     "watch": "tsc -b tsconfig.esm.json --watch --preserveWatchOutput",
     "gql-gen": "graphql-codegen",
@@ -99,8 +104,10 @@
     "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-toast": "^1.2.4",
     "@radix-ui/react-tooltip": "^1.1.7",
+    "@shopify/app-bridge-types": "^0.5.3",
     "@shopify/polaris": "^12.0.0",
     "@shopify/polaris-icons": "^8.1.0",
+    "@shopify/polaris-types": "^1.0.1",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-links": "^8.6.14",

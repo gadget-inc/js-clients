@@ -6,12 +6,17 @@ import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 import { first50WidgetRecords, widgetModelMetadata } from "./metadata/widgetMetadata.js";
 
-describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoTable }, wrapper }) => {
+describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoTable }, wrapper, clickOptions }) => {
   const componentIdentifiers =
     name === SUITE_NAMES.POLARIS
       ? {
           selectAllCheckbox: `input[id="«r3»"]`,
           singleRowCheckbox: (recordId: string | number) => `input[id="Select-${recordId}"]`,
+        }
+      : name === SUITE_NAMES.POLARIS_WC
+      ? {
+          selectAllCheckbox: `s-checkbox[id^="select-all-"]`,
+          singleRowCheckbox: (recordId: string | number) => `s-checkbox[id$="-${recordId}"]`,
         }
       : {
           // SHADCN
@@ -63,13 +68,26 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
       return cy.contains(label).click({ force: true });
     }
 
-    cy.get(`button[aria-label="More actions"]`).click({ multiple: true, force: true });
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.contains("s-button", "Actions...").click({ force: true });
+    } else {
+      cy.get(`button[aria-label="More actions"]`).click({ multiple: true, force: true });
+    }
     return cy.contains(label).click({ force: true });
+  };
+
+  /** Click a modal button (Run / Close). PolarisWC renders s-button instead of button. */
+  const clickModalButton = (label: string) => {
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.contains("s-button", label).click({ force: true });
+    } else {
+      cy.get("button").contains(label).click({ force: true });
+    }
   };
 
   const selectRecordIds = (ids: string[]) => {
     for (const id of ids) {
-      cy.get(componentIdentifiers.singleRowCheckbox(id)).eq(0).click();
+      cy.get(componentIdentifiers.singleRowCheckbox(id)).eq(0).click(clickOptions);
     }
   };
 
@@ -100,16 +118,29 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
   });
 
   it("can select and deselect all records on the current page", () => {
-    cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click();
+    cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click(clickOptions);
     cy.contains("50 selected").should("exist");
 
     openBulkAction("Delete");
 
     cy.contains("Are you sure you want to run this action on 50 records?").should("exist");
-    cy.get("button").contains("Close").click({ force: true });
+    clickModalButton("Close");
 
-    cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click();
-    cy.get(`button[aria-label="Actions"]`).should("not.exist");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      // PolarisWC s-checkbox with checked attribute set won't toggle via click.
+      // Dispatch a change event directly to trigger the deselect handler.
+      cy.get(componentIdentifiers.selectAllCheckbox)
+        .eq(0)
+        .then(($el) => {
+          const event = new Event("change", { bubbles: true, composed: true });
+          Object.defineProperty(event, "target", { value: { checked: false } });
+          $el[0].dispatchEvent(event);
+        });
+      cy.contains("selected").should("not.exist");
+    } else {
+      cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click(clickOptions);
+      cy.get(`button[aria-label="Actions"]`).should("not.exist");
+    }
   });
 
   it("Can run the bulkDelete action with the selected IDs", () => {
@@ -120,7 +151,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
 
     mockBulkDeleteWidgets(bulkDeleteSuccessResponse, "bulkDeleteWidgets");
     mockGetWidgets();
-    cy.get("button").contains("Run").click();
+    clickModalButton("Run");
     cy.wait("@bulkDeleteWidgets")
       .its("request.body.variables")
       .should("deep.equal", { ids: ["10", "11", "12"] }); // selected IDs included
@@ -128,7 +159,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
     cy.contains(ActionSuccessMessage);
-    cy.get("button").contains("Close").click({ force: true });
+    clickModalButton("Close");
 
     // Now ensure that error response appears in the modal
     selectRecordIds(["20", "21", "22"]);
@@ -137,7 +168,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
 
     mockBulkDeleteWidgets(bulkDeleteFailureResponse, "bulkDeleteWidgets2");
 
-    cy.get("button").contains("Run").click();
+    clickModalButton("Run");
     cy.wait("@bulkDeleteWidgets2");
     cy.contains(ActionErrorMessage);
   });
@@ -158,7 +189,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
 
       mockBulkDeleteWidgets(bulkDeleteSuccessResponse, "bulkDeleteWidgets");
       mockGetWidgets();
-      cy.get("button").contains("Run").click();
+      clickModalButton("Run");
       cy.wait("@bulkDeleteWidgets")
         .its("request.body.variables")
         .should("deep.equal", { ids: ["10", "11", "12"] }); // selected IDs included
@@ -166,7 +197,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
       cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
       cy.contains(ActionSuccessMessage);
-      cy.get("button").contains("Close").click({ force: true });
+      clickModalButton("Close");
     });
   });
 });

@@ -1,29 +1,40 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
-describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, adapter: { AutoForm }, wrapper, clickOptions }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
+
+  const getInputByField = (fieldId: string) => {
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      return cy.get(`[id="${fieldId}"]`).shadow().find("input");
+    }
+    return cy.get(`input[name="${fieldId}"]`);
+  };
+
+  const getSubmitBtn = () =>
+    name === SUITE_NAMES.POLARIS_WC ? cy.get("form s-button[type=submit]") : cy.get("form [type=submit][aria-hidden!=true]");
 
   it("prepopulates with default values from the server for create actions", () => {
     cy.mountWithWrapper(<AutoForm action={api.part.create} />, wrapper);
 
     // fill in name but not inventoryCount
-    cy.get(`input[name="part.name"]`).should("have.value", "");
-    cy.get(`input[name="part.count"]`).should("have.value", "0");
-    cy.get(`input[name="part.notes"]`).should("have.value", "no notes");
+    getInputByField("part.name").should("have.value", "");
+    getInputByField("part.count").should("have.value", "0");
+    getInputByField("part.notes").should("have.value", "no notes");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
   });
 
   it("prepopulates with default values from the props of the form which take precedence", () => {
     cy.mountWithWrapper(<AutoForm action={api.part.create} defaultValues={{ part: { name: "test record" } }} />, wrapper);
 
-    cy.get(`input[name="part.name"]`).should("have.value", "test record");
-    cy.get(`input[name="part.count"]`).should("have.value", "");
-    cy.get(`input[name="part.notes"]`).should("have.value", "");
+    getInputByField("part.name").should("have.value", "test record");
+    getInputByField("part.count").should("have.value", "");
+    getInputByField("part.notes").should("have.value", "");
   });
 
   it("can set default values in props for excluded fields and send them to the server", () => {
@@ -32,15 +43,15 @@ describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, ada
       wrapper
     );
 
-    cy.get(`input[name="part.count"]`).should("have.value", "");
-    cy.get(`input[name="part.notes"]`).should("have.value", "");
-    cy.get(`input[name="part.name"]`).should("not.exist");
+    getInputByField("part.count").should("have.value", "");
+    getInputByField("part.notes").should("have.value", "");
+    (name === SUITE_NAMES.POLARIS_WC ? cy.get('[id="part.name"]') : cy.get(`input[name="part.name"]`)).should("not.exist");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createPart`, (req) => {
       req.reply();
     }).as("createPart");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
     cy.wait("@createPart");
     cy.get("@createPart")
       .its("request.body.variables")
@@ -53,15 +64,15 @@ describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, ada
       wrapper
     );
 
-    cy.get(`input[name="part.count"]`).should("have.value", "");
-    cy.get(`input[name="part.notes"]`).should("have.value", "");
-    cy.get(`input[name="part.name"]`).should("not.exist");
+    getInputByField("part.count").should("have.value", "");
+    getInputByField("part.notes").should("have.value", "");
+    (name === SUITE_NAMES.POLARIS_WC ? cy.get('[id="part.name"]') : cy.get(`input[name="part.name"]`)).should("not.exist");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createPart`, (req) => {
       req.reply();
     }).as("createPart");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
     cy.wait("@createPart");
     cy.get("@createPart")
       .its("request.body.variables")
@@ -90,10 +101,10 @@ describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, ada
     cy.mountWithWrapper(<AutoForm action={api.part.update} findBy="1" />, wrapper);
 
     // fill in name but not inventoryCount
-    cy.get(`input[name="part.name"]`).should("have.value", "test record");
-    cy.get(`input[name="part.count"]`).should("have.value", "");
-    cy.get(`input[name="part.notes"]`).should("have.value", "some notes");
+    getInputByField("part.name").should("have.value", "test record");
+    getInputByField("part.count").should("have.value", "");
+    getInputByField("part.notes").should("have.value", "some notes");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
   });
 });

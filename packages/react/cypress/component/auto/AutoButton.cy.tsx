@@ -3,7 +3,7 @@ import React from "react";
 import { api } from "../../support/api.js";
 import { describeForEachAutoAdapter } from "../../support/auto.js";
 
-describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapper }) => {
+describeForEachAutoAdapter("AutoButton", ({ adapter: { AutoButton }, wrapper, clickOptions }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
@@ -23,7 +23,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("createWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@createWidget");
     cy.get("@createWidget").its("request.body.variables").should("deep.equal", { widget: {} });
@@ -46,7 +46,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("createWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@createWidget");
     cy.get("@createWidget")
@@ -66,7 +66,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       forceNetworkError: true,
     }).as("createWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@createWidget");
 
@@ -88,7 +88,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("updateWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@updateWidget");
     cy.get("@updateWidget")
@@ -137,7 +137,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("updateWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@updateWidget").then(() => {
       expect(onSuccessCalled).to.be.true;
@@ -164,7 +164,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       forceNetworkError: true,
     }).as("updateWidget");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@updateWidget").then(() => {
       expect(onErrorCalled).to.be.true;
@@ -183,7 +183,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("flipAll");
 
-    cy.get("#auto").click();
+    cy.get("#auto").click(clickOptions);
 
     cy.wait("@flipAll");
     cy.get("@flipAll").its("request.body.variables").should("deep.equal", {});
@@ -217,7 +217,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
     }).as("createWidget");
 
     cy.contains("Create Widget")
-      .click()
+      .click(clickOptions)
       .then(() => {
         expect(onActionCalled).to.be.true;
       });

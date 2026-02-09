@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter("AutoForm - HasManyThrough fields", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
@@ -23,13 +24,20 @@ describeForEachAutoAdapter("AutoForm - HasManyThrough fields", ({ name, adapter:
     cy.mountWithWrapper(<AutoForm action={api.hasManyThrough.baseModel.create} />, wrapper);
     cy.wait("@ModelActionMetadata");
 
-    // Name field input is shown
-    cy.contains("Base model name");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      // PolarisWC renders labels as the label attribute on web components
+      cy.get('[label="Base model name"]').should("exist");
+      cy.get('[label="Joiner models"]').should("not.exist");
+      cy.get('[label="Base model hmt field"]').should("exist");
+    } else {
+      // Name field input is shown
+      cy.contains("Base model name");
 
-    // hasMany->joinModel input is filtered out
-    cy.contains("Joiner models").should("not.exist");
+      // hasMany->joinModel input is filtered out
+      cy.contains("Joiner models").should("not.exist");
 
-    cy.contains("Base model hmt field").should("exist");
+      cy.contains("Base model hmt field").should("exist");
+    }
   });
 });
 

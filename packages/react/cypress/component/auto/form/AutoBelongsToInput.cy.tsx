@@ -6,10 +6,20 @@ import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter(
   "AutoBelongsToInput",
-  ({ name, adapter: { AutoForm, AutoSubmit, SubmitResultBanner, AutoBelongsToInput }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoSubmit, SubmitResultBanner, AutoBelongsToInput }, wrapper, clickOptions }) => {
     const blurComboboxes = () => {
       cy.get("body").click({ force: true });
     };
+
+    /** For Polaris WC the combobox input is inside s-text-field shadow DOM (id is path + "-input"). */
+    const getSectionComboboxInput = () => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        return cy.get("s-text-field#widget\\.section-input").shadow().find("input");
+      }
+      return cy.get('input[name="widget.section"]');
+    };
+
+    const getSubmitBtn = () => (name === SUITE_NAMES.POLARIS_WC ? cy.get("form s-button[type=submit]") : cy.getSubmitButton());
 
     const interceptModelUpdateActionMetadata = () => {
       cy.mockModelActionMetadata(api, {
@@ -108,7 +118,7 @@ describeForEachAutoAdapter(
       if (name === SUITE_NAMES.POLARIS) {
         const deselectSection1 = () => {
           cy.get(`[id="1_Section 1"]`); // Section 1 is already selected
-          cy.get(`button[aria-label="Remove "]`).click(); // Deselect
+          cy.get(`button[aria-label="Remove "]`).click(clickOptions); // Deselect
         };
 
         const getSection3 = () => {
@@ -118,12 +128,30 @@ describeForEachAutoAdapter(
       }
       if (name === SUITE_NAMES.SHADCN) {
         const deselectSection1 = () => {
-          cy.get(`[cmdk-input]`).click(); // Click to focus the input field
+          cy.get(`[cmdk-input]`).click(clickOptions); // Click to focus the input field
           cy.get('[cmdk-item][data-value="1-Section 1"][data-selected="true"]').should("exist");
-          cy.get(`button[aria-label="Remove"]`).click(); // Deselect
+          cy.get(`button[aria-label="Remove"]`).click(clickOptions); // Deselect
         };
         const getSection3 = () => {
           cy.get(`[cmdk-item][data-value="3-Section 3"][data-selected="true"]`).should("exist");
+        };
+        return { deselectSection1, getSection3 };
+      }
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        const deselectSection1 = () => {
+          // Selected tag (s-badge) is inside the combobox s-text-field shadow DOM
+          cy.get("s-text-field#widget\\.section-input")
+            .shadow()
+            .find("s-badge")
+            .contains("Section 1")
+            .parents("s-badge")
+            .first()
+            .find("div")
+            .contains("✕")
+            .click(clickOptions);
+        };
+        const getSection3 = () => {
+          cy.get('button[role="option"]').contains("Section 3").should("exist");
         };
         return { deselectSection1, getSection3 };
       }
@@ -146,20 +174,20 @@ describeForEachAutoAdapter(
 
       expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: null } } });
       blurComboboxes();
-      cy.getSubmitButton().click();
+      getSubmitBtn().click(clickOptions);
       cy.contains("Saved Widget successfully");
     });
 
     it("can select a related record and submit it", () => {
       cy.mountWithWrapper(<AutoForm action={api.widget.update} findBy="42" />, wrapper);
 
-      cy.get(`input[name="widget.section"]`).click();
-      cy.contains(`Section 3`).click();
+      getSectionComboboxInput().click(clickOptions);
+      cy.contains(`Section 3`).click(clickOptions);
       operations().getSection3();
 
       expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
       blurComboboxes();
-      cy.getSubmitButton().click();
+      getSubmitBtn().click(clickOptions);
       cy.contains("Saved Widget successfully");
     });
 
@@ -173,12 +201,12 @@ describeForEachAutoAdapter(
           </AutoForm>,
           wrapper
         );
-        cy.get(`input[name="widget.section"]`).click();
-        cy.contains(`Section 3 other field`).click();
+        getSectionComboboxInput().click(clickOptions);
+        cy.contains(`Section 3 other field`).click(clickOptions);
 
         expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
         blurComboboxes();
-        cy.getSubmitButton().click();
+        getSubmitBtn().click(clickOptions);
         cy.contains("Saved Widget successfully");
       });
 
@@ -191,12 +219,12 @@ describeForEachAutoAdapter(
           </AutoForm>,
           wrapper
         );
-        cy.get(`input[name="widget.section"]`).click();
-        cy.contains(`Custom label for 3`).click();
+        getSectionComboboxInput().click(clickOptions);
+        cy.contains(`Custom label for 3`).click(clickOptions);
 
         expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
         blurComboboxes();
-        cy.getSubmitButton().click();
+        getSubmitBtn().click(clickOptions);
         cy.contains("Saved Widget successfully");
       });
     });

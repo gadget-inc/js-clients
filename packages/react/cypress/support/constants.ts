@@ -1,6 +1,7 @@
 export const SUITE_NAMES = {
   SHADCN: "Shadcn",
   POLARIS: "Polaris",
+  POLARIS_WC: "PolarisWC",
 } as const;
 
 export const TEST_SUITES = {

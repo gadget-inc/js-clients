@@ -10,6 +10,16 @@ const preview = {
         date: /Date$/i,
       },
     },
+    html: {
+      headTags: [
+        {
+          tagName: "script",
+          attributes: {
+            src: "https://cdn.shopify.com/shopifycloud/polaris.js",
+          },
+        },
+      ],
+    },
   },
 };
 

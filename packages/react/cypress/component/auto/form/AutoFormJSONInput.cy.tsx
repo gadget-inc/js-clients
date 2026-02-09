@@ -2,10 +2,11 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter(
   "AutoFormJSONInput",
-  ({ name, adapter: { AutoForm, AutoJSONInput, AutoSubmit, SubmitResultBanner, AutoInput }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoJSONInput, AutoSubmit, SubmitResultBanner, AutoInput }, wrapper, clickOptions }) => {
     const AutoJSONInputWithSubmit = (props: { field: string }) => (
       <>
         <AutoJSONInput {...props} />
@@ -23,6 +24,22 @@ describeForEachAutoAdapter(
         <AutoSubmit id="auto" />
       </>
     );
+
+    const getJSONTextarea = (fieldId: string) =>
+      name === SUITE_NAMES.POLARIS_WC ? cy.get(`[id="${fieldId}"]`).shadow().find("textarea") : cy.get(`textarea[name="${fieldId}"]`);
+
+    const typeInField = (fieldId: string, text: string, clear = false) => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        const input = cy.get(`[id="${fieldId}"]`).shadow().find("input");
+        input.click(clickOptions);
+        if (clear) input.clear();
+        input.type(text);
+      } else {
+        cy.get(`input[name="${fieldId}"]`).click();
+        if (clear) cy.get(`input[name="${fieldId}"]`).clear();
+        cy.get(`input[name="${fieldId}"]`).type(text);
+      }
+    };
 
     beforeEach(() => {
       cy.viewport("macbook-13");
@@ -60,20 +77,25 @@ describeForEachAutoAdapter(
         wrapper
       );
 
-      cy.get(`textarea[name="widget.metafields"]`).type("not a valid JSON");
+      getJSONTextarea("widget.metafields").click(clickOptions).type("not a valid JSON");
 
       // fill in other required attributes
-      cy.get(`input[name="widget.inventoryCount"]`).type("10");
-      cy.get(`input[name="widget.name"]`).type("foobar");
+      typeInField("widget.inventoryCount", "10");
+      typeInField("widget.name", "foobar");
 
       // try to submit form, but it shouldn't submit as the json field is invalid
-      cy.get(`#auto`).click();
+      cy.get(`#auto`).click(clickOptions);
 
-      cy.contains(`Invalid JSON: Unexpected token 'o', "not a valid JSON" is not valid JSON`);
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        // PolarisWC renders the error on the host via the error attribute
+        cy.get('[id="widget.metafields"]').should("have.attr", "error").and("include", "Invalid JSON");
+      } else {
+        cy.contains(`Invalid JSON: Unexpected token 'o', "not a valid JSON" is not valid JSON`);
+      }
 
-      cy.get(`textarea[name="widget.metafields"]`).clear().type(`{"foo": "bar"}`, { parseSpecialCharSequences: false });
+      getJSONTextarea("widget.metafields").clear().type(`{"foo": "bar"}`, { parseSpecialCharSequences: false });
 
-      cy.get(`#auto`).click();
+      cy.get(`#auto`).click(clickOptions);
 
       cy.contains(`Saved Widget successfully`);
     });
@@ -111,7 +133,7 @@ describeForEachAutoAdapter(
       );
 
       cy.wait("@widget");
-      cy.get(`textarea[name="widget.metafields"]`).should(
+      getJSONTextarea("widget.metafields").should(
         "have.value",
         `{
   "hello": "world!"
@@ -150,7 +172,7 @@ describeForEachAutoAdapter(
       );
       cy.wait("@widget");
 
-      cy.get(`textarea[name="widget.metafields"]`).should(
+      getJSONTextarea("widget.metafields").should(
         "have.value",
         `"some stored string"` // rendered as a JSON encoded string, not the raw contents of it
       );
@@ -187,7 +209,7 @@ describeForEachAutoAdapter(
       );
       cy.wait("@widget");
 
-      cy.get(`textarea[name="widget.metafields"]`).should("have.value", ``);
+      getJSONTextarea("widget.metafields").should("have.value", ``);
     });
 
     it("renders when there is a null existing JSON value when fetching the record", () => {
@@ -221,7 +243,7 @@ describeForEachAutoAdapter(
         wrapper
       );
 
-      cy.get(`textarea[name="widget.metafields"]`).should("have.value", ``);
+      getJSONTextarea("widget.metafields").should("have.value", ``);
     });
 
     it("allows clearing a JSON value by emptying the input", () => {
@@ -259,8 +281,8 @@ describeForEachAutoAdapter(
 
       cy.wait("@widget");
 
-      cy.get(`textarea[name="widget.metafields"]`).clear();
-      cy.get(`textarea[name="widget.metafields"]`).should("have.value", "");
+      getJSONTextarea("widget.metafields").clear();
+      getJSONTextarea("widget.metafields").should("have.value", "");
 
       cy.intercept(
         {
@@ -268,7 +290,7 @@ describeForEachAutoAdapter(
           url: `${api.connection.options.endpoint}?operation=updateWidget`,
         },
         (req) => {
-          expect(req.body.variables.widget.metafields).to.be.null;
+          void expect(req.body.variables.widget.metafields).to.be.null;
 
           return {
             body: {
@@ -289,7 +311,7 @@ describeForEachAutoAdapter(
         }
       ).as("updateWidget");
 
-      cy.get(`#auto`).click();
+      cy.get(`#auto`).click(clickOptions);
       cy.wait("@updateWidget");
     });
   }

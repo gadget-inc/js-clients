@@ -301,8 +301,14 @@ export const CustomCellWithDeleteButton: any = {
     model: api.autoTableTest,
     columns: [
       "str",
-      { header: "Delete", render: ({ record }: { record: any }) => <CustomDeleteButtonCellRenderer record={record} /> },
-      { header: "Delete", render: ({ record }: { record: any }) => <p>ID:{record.id} | Different renderer, same header</p> },
+      {
+        header: "Delete",
+        render: ({ record }: { record: any }) => <CustomDeleteButtonCellRenderer record={record} />,
+      },
+      {
+        header: "Delete",
+        render: ({ record }: { record: any }) => <p>ID:{record.id} | Different renderer, same header</p>,
+      },
     ],
   },
 };
