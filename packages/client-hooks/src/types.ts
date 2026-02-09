@@ -484,11 +484,13 @@ export type UseFindBy = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   finder: F,
   value: string,
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 >;
@@ -521,10 +523,12 @@ export type UseFindFirst = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findFirst: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 >;
@@ -557,10 +561,12 @@ export type UseFindMany = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findMany: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<
   GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 >;
@@ -593,11 +599,13 @@ export type UseFindOne = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findOne: F },
   id: string,
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 >;
@@ -630,10 +638,12 @@ export type UseGet = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends GetFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { get: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 >;
@@ -690,10 +700,12 @@ export type UseMaybeFindFirst = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findFirst: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
 >>;
@@ -726,11 +738,13 @@ export type UseMaybeFindOne = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions
+  const Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findOne: F },
   id: string,
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions> & {
+    select?: LimitToKnownKeys<NonNullable<Options["select"]>, F["selectionType"]>;
+  }
 ) => ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
 >>;

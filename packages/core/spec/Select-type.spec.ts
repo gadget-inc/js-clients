@@ -1,6 +1,5 @@
 import type { AssertTrue, IsExact } from "conditional-type-checks";
-import type { DeepFilterNever, Select } from "../src/types.js";
-import { $args } from "../src/types.js";
+import type { $args, DeepFilterNever, Select } from "../src/types.js";
 import type { TestSchema, TestSchemaWithFieldCalls, TestSchemaWithNestedFieldCalls } from "./TestSchema.js";
 
 describe("Select<>", () => {
