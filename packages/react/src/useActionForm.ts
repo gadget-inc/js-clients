@@ -35,7 +35,7 @@ type ActionFormOptions<
   // eslint-disable-next-line @typescript-eslint/ban-types
   ExtraFormVariables extends FieldValues = {},
   DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables,
-  ActionResultData = UseActionFormHookStateData<ActionFunc>
+  ActionResultData = UseActionFormHookStateData<ActionFunc>,
 > = Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, any>, "defaultValues"> & {
   defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
 
@@ -102,13 +102,13 @@ export const useActionForm = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   // eslint-disable-next-line @typescript-eslint/ban-types
   ExtraFormVariables extends FieldValues = {},
-  FormContext = any
+  FormContext = any,
 >(
   action: ActionFunc,
   options?: ActionFormOptions<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables>
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const findById = options && "findBy" in options ? options.findBy : undefined;
-  const throwOnInvalidFindByObject = options && "findBy" in options ? options?.throwOnInvalidFindByObject ?? true : true;
+  const throwOnInvalidFindByObject = options && "findBy" in options ? (options?.throwOnInvalidFindByObject ?? true) : true;
   const pause = options && "pause" in options ? options.pause : undefined;
   const api = useApi();
   const coreImplementation = useCoreImplementation();

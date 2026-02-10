@@ -194,7 +194,7 @@ export const getBulkActionOptionCallback = (props: {
         option.action?.(selectedRowsWithRawRecord);
         clearSelection();
       }
-    : option.selectModelAction ?? (() => undefined);
+    : (option.selectModelAction ?? (() => undefined));
 };
 
 export type AutoBulkActionModal = {

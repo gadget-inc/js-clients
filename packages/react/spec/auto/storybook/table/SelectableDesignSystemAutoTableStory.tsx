@@ -13,7 +13,7 @@ export const SelectableDesignSystemAutoTableStory = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
@@ -29,7 +29,7 @@ const PolarisAutoTableStory = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
@@ -57,7 +57,7 @@ const ShadcnAutoTableStory = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {

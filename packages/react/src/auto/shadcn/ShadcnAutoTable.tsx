@@ -24,7 +24,7 @@ export type ShadcnAutoTableProps<
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 > = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>;
 
 /**
@@ -68,8 +68,8 @@ export const makeAutoTable = (elements: ShadcnElements) => {
             selection.recordIds.length === rows?.length && rows?.length > 0
               ? true
               : selection.recordIds.length > 0
-              ? "indeterminate"
-              : false
+                ? "indeterminate"
+                : false
           }
           className="inline-flex"
           onCheckedChange={(value) => selection.onSelectionChange(SelectionType.Page, !!value)}
@@ -222,7 +222,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     GivenOptions extends OptionsType,
     SchemaT,
     FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-    Options extends FinderFunction["optionsType"]
+    Options extends FinderFunction["optionsType"],
   >(props: ShadcnAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>) {
     const { onClick, searchable = true, paginate = true } = props;
 
@@ -383,7 +383,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     GivenOptions extends OptionsType,
     SchemaT,
     FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-    Options extends FinderFunction["optionsType"]
+    Options extends FinderFunction["optionsType"],
   >(
     props: ShadcnAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
   ) => {

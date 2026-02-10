@@ -19,7 +19,7 @@ export const useAuth = <
   SessionOptions extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions,
   UserOptions extends Client["user"]["findMany"]["optionsType"] & ReadOperationOptions,
   Client extends ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
-  ClientType extends Client | undefined
+  ClientType extends Client | undefined,
 >(
   client?: Client
 ): {

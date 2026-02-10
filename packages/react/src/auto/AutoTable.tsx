@@ -10,7 +10,7 @@ export type AutoTableProps<
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 > = {
   /**
    * The Gadget model with records that will be shown in the table.

@@ -37,14 +37,14 @@ export type ListResult<Data> = [
     error?: AnyErrorWrapper;
   },
 
-  (opts?: Partial<OperationContext>) => void
+  (opts?: Partial<OperationContext>) => void,
 ];
 
 export const useList = <
   GivenOptions extends OptionsType,
   SchemaT,
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & ReadOperationOptions & ListOptions
+  Options extends F["optionsType"] & ReadOperationOptions & ListOptions,
 >(
   manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & ListOptions>

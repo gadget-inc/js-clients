@@ -412,10 +412,10 @@ export const getDateTimeObjectFromDate = (dt: Date, use24Hour = false) => {
     hour: use24Hour
       ? dateTime.getHours().toString()
       : dateTime.getHours() > 12
-      ? (dateTime.getHours() - 12).toString()
-      : dateTime.getHours() === 0
-      ? "12"
-      : dateTime.getHours().toString(),
+        ? (dateTime.getHours() - 12).toString()
+        : dateTime.getHours() === 0
+          ? "12"
+          : dateTime.getHours().toString(),
     minute: dateTime.getMinutes().toString().padStart(2, "0"),
     ampm: dateTime.getHours() >= 12 ? "PM" : "AM",
   };

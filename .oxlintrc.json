@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "import", "jest", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "19"
+    }
+  },
+  "rules": {
+    "typescript/consistent-type-imports": ["warn", { "prefer": "type-imports" }],
+    "typescript/explicit-function-return-type": "off",
+    "typescript/explicit-module-boundary-types": "off",
+    "typescript/no-explicit-any": "off",
+    "typescript/no-unused-vars": ["warn", {
+      "varsIgnorePattern": "^_",
+      "argsIgnorePattern": "^_",
+      "caughtErrors": "none"
+    }],
+    "eslint/no-unused-vars": "off",
+    "react/display-name": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "import/no-self-import": "error",
+    "eslint/require-await": "off",
+    "eslint/no-throw-literal": "warn",
+    "eslint/no-unused-expressions": "off",
+    "jest/expect-expect": "off",
+    "jest/no-conditional-expect": "off",
+    "jest/no-standalone-expect": "off",
+    "jest/require-to-throw-message": "off",
+    "jest/no-disabled-tests": "off",
+    "unicorn/no-thenable": "off",
+    "unicorn/no-useless-fallback-in-spread": "off",
+    "unicorn/no-useless-spread": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/spec/**", "**/*.spec.*", "**/*.test.*"],
+      "rules": {
+        "typescript/no-non-null-assertion": "off",
+        "react/rules-of-hooks": "off",
+        "eslint/no-unused-expressions": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "tmp",
+    "packages/*/dist",
+    "packages/react/auto",
+    "jest.config.js"
+  ]
+}

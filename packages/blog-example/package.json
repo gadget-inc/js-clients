@@ -1,15 +1,15 @@
 {
   "name": "blog-example",
   "version": "0.1.0",
-  "source": "src/index.ts",
   "private": "true",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/blog-example",
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "source": "src/index.ts",
   "files": [
     "README.md",
     "dist/src/**/*"
   ],
-  "license": "MIT",
-  "repository": "github:gadget-inc/js-clients",
-  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/blog-example",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "rm -rf node_modules/.vite && vite --clearScreen=false",

@@ -31,8 +31,8 @@ export const PolarisAutoNumberInput = autoInput((props: PolarisAutoNumberInputPr
     metadata.configuration.decimals > 0
       ? getStepFromNumberOfDecimals(metadata.configuration.decimals)
       : value
-      ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
-      : 1;
+        ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
+        : 1;
 
   return <PolarisAutoTextInput step={step} {...props} />;
 });

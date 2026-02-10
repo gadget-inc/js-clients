@@ -83,7 +83,10 @@ const compileVariables = (operation: BuilderOperation) => {
 };
 
 class FieldCall {
-  constructor(readonly args: Record<string, any>, readonly subselection?: FieldSelection) {}
+  constructor(
+    readonly args: Record<string, any>,
+    readonly subselection?: FieldSelection
+  ) {}
 }
 
 export interface VariableOptions {
@@ -95,7 +98,11 @@ export interface VariableOptions {
 
 /** Represents one reference to a variable somewhere in a selection */
 export class Variable {
-  constructor(readonly type: string, readonly name?: string, readonly value?: any) {}
+  constructor(
+    readonly type: string,
+    readonly name?: string,
+    readonly value?: any
+  ) {}
   present() {
     return this.value != null;
   }
@@ -123,11 +130,14 @@ export const compileWithVariableValues = (operation: BuilderOperation): { query:
 
   return {
     query: compile(operation),
-    variables: Object.entries(variables ?? {}).reduce((acc, [name, variable]) => {
-      if (typeof variable.value !== "undefined") {
-        acc[name] = variable.value;
-      }
-      return acc;
-    }, {} as Record<string, any>),
+    variables: Object.entries(variables ?? {}).reduce(
+      (acc, [name, variable]) => {
+        if (typeof variable.value !== "undefined") {
+          acc[name] = variable.value;
+        }
+        return acc;
+      },
+      {} as Record<string, any>
+    ),
   };
 };

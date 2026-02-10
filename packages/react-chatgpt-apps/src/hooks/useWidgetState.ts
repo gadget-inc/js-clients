@@ -37,27 +37,24 @@ export function useWidgetState<T extends UnknownObject>(
       return widgetStateFromWindow;
     }
 
-    return typeof defaultState === "function" ? defaultState() : defaultState ?? null;
+    return typeof defaultState === "function" ? defaultState() : (defaultState ?? null);
   });
 
   useEffect(() => {
     _setWidgetState(widgetStateFromWindow);
   }, [widgetStateFromWindow]);
 
-  const setWidgetState = useCallback(
-    (state: SetStateAction<T | null>) => {
-      _setWidgetState((prevState) => {
-        const newState = typeof state === "function" ? state(prevState) : state;
+  const setWidgetState = useCallback((state: SetStateAction<T | null>) => {
+    _setWidgetState((prevState) => {
+      const newState = typeof state === "function" ? state(prevState) : state;
 
-        if (newState != null) {
-          void window.openai.setWidgetState(newState);
-        }
+      if (newState != null) {
+        void window.openai.setWidgetState(newState);
+      }
 
-        return newState;
-      });
-    },
-    [window.openai.setWidgetState]
-  );
+      return newState;
+    });
+  }, []);
 
   return [widgetState, setWidgetState] as const;
 }

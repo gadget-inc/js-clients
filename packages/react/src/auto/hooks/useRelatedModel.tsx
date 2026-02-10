@@ -131,8 +131,8 @@ export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "c
         typeof option.primary === "string"
           ? option.primary.toLowerCase()
           : React.isValidElement(option.primary)
-          ? JSON.stringify(option.primary.props).toLowerCase()
-          : "";
+            ? JSON.stringify(option.primary.props).toLowerCase()
+            : "";
 
       return search.value ? optionAsString.includes(search.value.toLowerCase()) : true;
     }),
@@ -146,8 +146,8 @@ const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): 
   typeof optionLabel === "string"
     ? record[optionLabel] // Related model field API id
     : Array.isArray(optionLabel)
-    ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
-    : optionLabel({ record }); // Callback on the whole related model record
+      ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
+      : optionLabel({ record }); // Callback on the whole related model record
 
 const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: string }) => string) => string[] }) =>
   records

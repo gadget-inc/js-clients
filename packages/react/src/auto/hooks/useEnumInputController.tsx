@@ -29,7 +29,7 @@ export const useEnumInputController = (props: AutoEnumInputProps) => {
   const [searchValue, setSearchValue] = useState("");
 
   const selectedOptions = useMemo(
-    () => (typeof fieldProps.value === "string" ? [fieldProps.value] : fieldProps.value ?? []) as string[],
+    () => (typeof fieldProps.value === "string" ? [fieldProps.value] : (fieldProps.value ?? [])) as string[],
     [fieldProps.value]
   );
   const providedOptions = useMemo(() => config.options.map((option) => option.name), [config.options]);

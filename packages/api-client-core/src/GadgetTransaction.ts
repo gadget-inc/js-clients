@@ -8,7 +8,10 @@ export class TransactionRolledBack extends Error {}
 /** Represents an open transaction against the Gadget API */
 export class GadgetTransaction {
   open = false;
-  constructor(readonly client: Client, readonly subscriptionClient: SubscriptionClient) {}
+  constructor(
+    readonly client: Client,
+    readonly subscriptionClient: SubscriptionClient
+  ) {}
 
   /** Shut down this transaction by closing the connection to the backend. */
   close() {

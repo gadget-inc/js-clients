@@ -72,7 +72,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
     cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget`, times: 1 }, (req) => {
       req.reply({
         data: {
-          widget: { id: "999", startsAt: startsAt === false ? undefined : startsAt ?? dateInLocalTZ, __typename: "Widget" },
+          widget: { id: "999", startsAt: startsAt === false ? undefined : (startsAt ?? dateInLocalTZ), __typename: "Widget" },
         },
       });
     }).as("widget");

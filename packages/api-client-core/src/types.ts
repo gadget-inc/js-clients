@@ -35,7 +35,7 @@ export type VariablesOptions = Record<string, VariableOptions>;
 export type DefaultSelection<
   SelectionType,
   Options extends { select?: SelectionType | null },
-  Defaults extends SelectionType
+  Defaults extends SelectionType,
 > = Options["select"] extends SelectionType ? Options["select"] : Defaults;
 
 /**
@@ -71,16 +71,16 @@ export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> ext
 type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
   ? never
   : Schema extends (infer T)[]
-  ? InnerSelect<T, Selection>[]
-  : Schema extends null
-  ? InnerSelect<Exclude<Schema, null>, Selection> | null
-  : {
-      [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
-        ? Schema[Key]
-        : Selection[Key] extends FieldSelection
-        ? InnerSelect<Schema[Key], Selection[Key]>
-        : never;
-    };
+    ? InnerSelect<T, Selection>[]
+    : Schema extends null
+      ? InnerSelect<Exclude<Schema, null>, Selection> | null
+      : {
+          [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
+            ? Schema[Key]
+            : Selection[Key] extends FieldSelection
+              ? InnerSelect<Schema[Key], Selection[Key]>
+              : never;
+        };
 
 /**
  * Filter out any keys in `T` that are mapped to `never` recursively. Any nested objects that are empty after having never valued keys removed are also removed.
@@ -91,11 +91,12 @@ type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = 
  * >;  // { c: string; }
  * ```
  */
-export type DeepFilterNever<T> = T extends Record<string, unknown>
-  ? FilterNever<{
-      [Key in keyof T]: T[Key] extends Record<string, unknown> ? DeepFilterNever<T[Key]> : T[Key];
-    }>
-  : T;
+export type DeepFilterNever<T> =
+  T extends Record<string, unknown>
+    ? FilterNever<{
+        [Key in keyof T]: T[Key] extends Record<string, unknown> ? DeepFilterNever<T[Key]> : T[Key];
+      }>
+    : T;
 
 /**
  * Extract a subset of a schema given a selection
@@ -880,13 +881,14 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
   startAt?: Date | string;
 } & Partial<OperationContext>;
 
-export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
-  ? Options
-  : Action extends BulkActionFunction<infer Options, any, any, any, any>
-  ? Options
-  : Action extends GlobalActionFunction<any>
-  ? Record<string, never>
-  : never;
+export type ActionFunctionOptions<Action extends AnyActionFunction> =
+  Action extends ActionFunction<infer Options, any, any, any, any>
+    ? Options
+    : Action extends BulkActionFunction<infer Options, any, any, any, any>
+      ? Options
+      : Action extends GlobalActionFunction<any>
+        ? Record<string, never>
+        : never;
 
 /** Get the result type of executing a view function */
 export type ViewResult<F extends ViewFunction<any, any>> = Awaited<

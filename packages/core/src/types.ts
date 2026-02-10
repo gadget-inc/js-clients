@@ -47,7 +47,7 @@ export type VariablesOptions = Record<string, VariableOptions>;
 export type DefaultSelection<
   Available extends FieldSelection,
   Options extends { select?: Available | null },
-  Defaults extends SomeFieldsSelected<Available>
+  Defaults extends SomeFieldsSelected<Available>,
 > = IfAny<Options, Defaults, IfAny<Options["select"], Defaults, Options["select"] extends Available ? Options["select"] : Defaults>>;
 
 /**
@@ -111,18 +111,18 @@ type InnerSelect<Schema, Selection extends FieldSelection | FieldSelectionWithAr
   Selection extends null | undefined
     ? never
     : Schema extends (infer T)[]
-    ? InnerSelect<T, Selection>[]
-    : Schema extends null
-    ? InnerSelect<Exclude<Schema, null>, Selection> | null
-    : {
-        [Key in Exclude<keyof Selection, typeof $args> & keyof Schema]: Selection[Key] extends true
-          ? Schema[Key]
-          : Selection[Key] extends FieldSelection | FieldSelectionWithArgs
-          ? Exclude<keyof Selection[Key], typeof $args> extends never
-            ? Schema[Key]
-            : InnerSelect<Schema[Key], Selection[Key]>
-          : never;
-      }
+      ? InnerSelect<T, Selection>[]
+      : Schema extends null
+        ? InnerSelect<Exclude<Schema, null>, Selection> | null
+        : {
+            [Key in Exclude<keyof Selection, typeof $args> & keyof Schema]: Selection[Key] extends true
+              ? Schema[Key]
+              : Selection[Key] extends FieldSelection | FieldSelectionWithArgs
+                ? Exclude<keyof Selection[Key], typeof $args> extends never
+                  ? Schema[Key]
+                  : InnerSelect<Schema[Key], Selection[Key]>
+                : never;
+          }
 >;
 
 /**
@@ -134,11 +134,12 @@ type InnerSelect<Schema, Selection extends FieldSelection | FieldSelectionWithAr
  * >;  // { c: string; }
  * ```
  */
-export type DeepFilterNever<T> = T extends Record<string, unknown>
-  ? FilterNever<{
-      [Key in keyof T]: T[Key] extends Record<string, unknown> ? DeepFilterNever<T[Key]> : T[Key];
-    }>
-  : T;
+export type DeepFilterNever<T> =
+  T extends Record<string, unknown>
+    ? FilterNever<{
+        [Key in keyof T]: T[Key] extends Record<string, unknown> ? DeepFilterNever<T[Key]> : T[Key];
+      }>
+    : T;
 
 /**
  * Extract a subset of a schema given a selection
@@ -838,11 +839,12 @@ export type PaginateOptions = {
  *   }
  * }
  */
-export type AvailableSelection<Schema> = Schema extends Array<infer T>
-  ? AvailableSelection<T>
-  : Schema extends object
-  ? { [key in keyof Schema]?: AvailableSelection<Schema[key]> }
-  : boolean | null | undefined;
+export type AvailableSelection<Schema> =
+  Schema extends Array<infer T>
+    ? AvailableSelection<T>
+    : Schema extends object
+      ? { [key in keyof Schema]?: AvailableSelection<Schema[key]> }
+      : boolean | null | undefined;
 
 /** Options for configuring the queue for a background action */
 export interface BackgroundActionQueue {
@@ -957,21 +959,22 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
 
 export type BackgroundActionResultData<
   F extends ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>,
-  Selection
-> = F extends ActionFunction<any, any, any, any, any>
-  ? F["hasReturnType"] extends true
-    ? any
-    : GadgetRecord<
-        Select<
-          Exclude<F["schemaType"], null | undefined>,
-          DefaultSelection<
-            F["selectionType"],
-            Selection extends { select?: F["selectionType"] | null | undefined } ? Selection : never,
-            F["defaultSelection"]
+  Selection,
+> =
+  F extends ActionFunction<any, any, any, any, any>
+    ? F["hasReturnType"] extends true
+      ? any
+      : GadgetRecord<
+          Select<
+            Exclude<F["schemaType"], null | undefined>,
+            DefaultSelection<
+              F["selectionType"],
+              Selection extends { select?: F["selectionType"] | null | undefined } ? Selection : never,
+              F["defaultSelection"]
+            >
           >
         >
-      >
-  : any;
+    : any;
 
 export type BuildOperationResult = {
   query: string;
@@ -986,7 +989,7 @@ export type BackgroundActionResult<Data = any> = {
 
 export interface AnyBackgroundActionHandle<
   SchemaT,
-  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>
+  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>,
 > {
   readonly id: string;
   result<Options extends ActionFunctionOptions<Action>, ResultData = BackgroundActionResultData<Action, Options>>(
@@ -995,13 +998,14 @@ export interface AnyBackgroundActionHandle<
   cancel(): Promise<void>;
 }
 
-export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
-  ? Options
-  : Action extends BulkActionFunction<infer Options, any, any, any, any>
-  ? Options
-  : Action extends GlobalActionFunction<any>
-  ? Record<string, never>
-  : never;
+export type ActionFunctionOptions<Action extends AnyActionFunction> =
+  Action extends ActionFunction<infer Options, any, any, any, any>
+    ? Options
+    : Action extends BulkActionFunction<infer Options, any, any, any, any>
+      ? Options
+      : Action extends GlobalActionFunction<any>
+        ? Record<string, never>
+        : never;
 
 /** Get the result type of executing a view function */
 export type ViewResult<F extends ViewFunction<any, any>> = Awaited<

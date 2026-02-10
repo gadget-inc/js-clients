@@ -7,7 +7,7 @@ export function useFocus<T extends HTMLElement = any>(
 ): [
   boolean,
   { onFocus: (event?: FocusEvent<T>) => void; onBlur: (event?: FocusEvent<T>) => void; ref: React.RefObject<T | null> },
-  boolean
+  boolean,
 ] {
   const [hasFocus, setFocus] = useState(false);
   const [hasFocusWithin, setFocusWithin] = useState(false);

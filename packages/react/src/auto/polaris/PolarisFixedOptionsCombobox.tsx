@@ -70,7 +70,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
   const selectedValues = useMemo(() => (value ? (allowMultiple ? value : [value]) : []), [allowMultiple, value]);
   const selectedOptions = allOptions.filter((option) => selectedValues.includes(option.value));
 
-  const [inputValue, setInputValue] = useState(allowMultiple ? "" : selectedOptions[0]?.label ?? "");
+  const [inputValue, setInputValue] = useState(allowMultiple ? "" : (selectedOptions[0]?.label ?? ""));
   const [options, setOptions] = useState(props.options);
 
   const callOnChange = useCallback(

@@ -282,7 +282,6 @@
   ```
 
 - # Added support for `upsert` actions in AutoForm.
-
   - Models that have `create` and `update` actions get the `upsert` meta-action
     - Upsert actions update records with given ID, and create a new record if the record does not exist
     - The ID field is optional and omitting it will run the create action

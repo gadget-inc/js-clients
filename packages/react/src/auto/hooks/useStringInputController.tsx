@@ -62,5 +62,5 @@ export const useStringInputController = (props: AutoTextInputProps) => {
 
 const getValue = (value: any, fieldType: GadgetFieldType) => {
   // JSON fields can have null value which is different from an empty string. In that case, use null directly
-  return fieldType === FieldType.Json ? value : value ?? "";
+  return fieldType === FieldType.Json ? value : (value ?? "");
 };

@@ -32,14 +32,14 @@ export type RecordIdentifier = string | { [key: string]: any };
 export type FormInput<InputT, Depth extends number = 9, CurrentDepth extends number[] = []> = CurrentDepth["length"] extends Depth
   ? any
   : IsAny<InputT> extends true
-  ? any
-  : InputT extends (infer Element)[]
-  ? FormInput<Element, Depth, CurrentDepth>[]
-  : InputT extends { create?: unknown; update?: unknown }
-  ? FormInput<InputT["create"], Depth, Increment<CurrentDepth>> | FormInput<InputT["update"], Depth, Increment<CurrentDepth>>
-  : InputT extends object
-  ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
-  : InputT | null | undefined;
+    ? any
+    : InputT extends (infer Element)[]
+      ? FormInput<Element, Depth, CurrentDepth>[]
+      : InputT extends { create?: unknown; update?: unknown }
+        ? FormInput<InputT["create"], Depth, Increment<CurrentDepth>> | FormInput<InputT["update"], Depth, Increment<CurrentDepth>>
+        : InputT extends object
+          ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
+          : InputT | null | undefined;
 
 /**
  * Type helper to convert `null` to undefined recursively within the form values type
@@ -48,17 +48,17 @@ export type FormInput<InputT, Depth extends number = 9, CurrentDepth extends num
 export type StripNulls<T> = T extends null
   ? undefined
   : T extends (infer U)[]
-  ? StripNulls<U>[]
-  : T extends object
-  ? { [K in keyof T]: StripNulls<T[K]> }
-  : T;
+    ? StripNulls<U>[]
+    : T extends object
+      ? { [K in keyof T]: StripNulls<T[K]> }
+      : T;
 
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
-  FormContext = any
+  FormContext = any,
 > = Omit<UseFormReturn<FormVariables & StripNulls<FormInput<ActionFunc["variablesType"]>>, FormContext>, "handleSubmit" | "formState"> & {
   formState: UseActionFormState<ActionFunc, FormVariables, FormContext> & { isReady: boolean };
   /**
@@ -101,27 +101,22 @@ export type UseActionFormSubmit<F extends ActionFunction<any, any, any, any, any
 
 type ExcludeNullish<T> = T extends null | undefined ? never : T;
 
-type ServerSideError<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = F extends ActionFunction<
-  any,
-  any,
-  any,
-  any,
-  any
->
-  ? {
-      [key in F["modelApiIdentifier"]]?: {
-        [key in
-          | keyof F["selectionType"]
-          | keyof ExcludeNullish<F["variablesType"]>
-          | ExcludeNullish<F["modelApiIdentifier"] extends "user" ? "password" : never>]?: { message: string };
-      };
-    }
-  : { [key in keyof ExcludeNullish<F["variablesType"]>]: { message: string } };
+type ServerSideError<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> =
+  F extends ActionFunction<any, any, any, any, any>
+    ? {
+        [key in F["modelApiIdentifier"]]?: {
+          [key in
+            | keyof F["selectionType"]
+            | keyof ExcludeNullish<F["variablesType"]>
+            | ExcludeNullish<F["modelApiIdentifier"] extends "user" ? "password" : never>]?: { message: string };
+        };
+      }
+    : { [key in keyof ExcludeNullish<F["variablesType"]>]: { message: string } };
 
 export type UseActionFormState<
   F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
-  FormContext
+  FormContext,
 > = Omit<UseFormReturn<FormVariables, FormContext>["formState"], "errors"> & {
   errors: UseFormReturn<FormVariables, FormContext>["formState"]["errors"] & ServerSideError<F>;
 };

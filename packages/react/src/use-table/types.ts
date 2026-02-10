@@ -147,7 +147,7 @@ export type TableResult<Data> = [
     selection: RecordSelection;
     sort: SortState;
   },
-  refresh: (opts?: Partial<OperationContext>) => void
+  refresh: (opts?: Partial<OperationContext>) => void,
 ];
 
 /**

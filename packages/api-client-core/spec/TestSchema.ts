@@ -79,6 +79,5 @@ export interface CreatePostOptions {
   select?: AvailablePostSelection;
 }
 
-export type CreatePostResult<Options extends CreatePostOptions> = SelectedPostOrDefault<Options> extends void
-  ? void
-  : GadgetRecord<SelectedPostOrDefault<Options>>;
+export type CreatePostResult<Options extends CreatePostOptions> =
+  SelectedPostOrDefault<Options> extends void ? void : GadgetRecord<SelectedPostOrDefault<Options>>;

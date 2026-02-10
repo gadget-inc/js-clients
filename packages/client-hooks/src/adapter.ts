@@ -72,7 +72,7 @@ type UseMutationExecute<Data = any, Variables extends AnyVariables = AnyVariable
 
 export type UseMutationResponse<Data = any, Variables extends AnyVariables = AnyVariables> = [
   UseMutationState<Data, Variables>,
-  UseMutationExecute<Data, Variables>
+  UseMutationExecute<Data, Variables>,
 ];
 
 interface UrqlBindings {

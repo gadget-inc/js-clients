@@ -34,7 +34,7 @@ export const PolarisAutoFormSkeleton = () => (
 export type PolarisAutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 > = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">;
 
 /**
@@ -43,7 +43,7 @@ export type PolarisAutoFormProps<
 export const PolarisAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
@@ -69,7 +69,7 @@ export const PolarisAutoForm = <
 const PolarisAutoFormComponent = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   //Polaris form props also take an 'action' property, which we must omit here.
   props: PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc>
