@@ -41,7 +41,7 @@
     "tiny-graphql-query-compiler": "^0.2.2",
     "tslib": "^2.6.2",
     "type-fest": "^3.13.1",
-    "wonka": "^6.3.2",
+    "wonka": "^6.3.5",
     "ws": "^8.18.2"
   },
   "devDependencies": {
