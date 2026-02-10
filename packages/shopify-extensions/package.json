@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "@gadgetinc/preact": "^0.1.5",
-    "@gadgetinc/react": "^0.24.2",
+    "@gadgetinc/react": "^0.25.0",
     "preact": "^10.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -12,15 +12,15 @@ import type {
   AutoRelationshipInputProps,
 } from "../../../../src/auto/interfaces/AutoRelationshipInputProps.js";
 import {
-  PolarisWCAutoBelongsToForm,
-  PolarisWCAutoForm,
-  PolarisWCAutoHasManyForm,
-  PolarisWCAutoHasManyThroughForm,
-  PolarisWCAutoHasManyThroughInput,
-  PolarisWCAutoHasOneForm,
-  PolarisWCAutoInput,
-  PolarisWCAutoSubmit,
-  PolarisWCSubmitResultBanner,
+  AutoBelongsToForm as PolarisWCAutoBelongsToForm,
+  AutoForm as PolarisWCAutoForm,
+  AutoHasManyForm as PolarisWCAutoHasManyForm,
+  AutoHasManyThroughForm as PolarisWCAutoHasManyThroughForm,
+  AutoHasManyThroughInput as PolarisWCAutoHasManyThroughInput,
+  AutoHasOneForm as PolarisWCAutoHasOneForm,
+  AutoInput as PolarisWCAutoInput,
+  AutoSubmit as PolarisWCAutoSubmit,
+  SubmitResultBanner as PolarisWCSubmitResultBanner,
 } from "../../../../src/auto/polaris-wc/index.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";

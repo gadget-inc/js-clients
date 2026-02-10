@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/react": "^0.24.2"
+    "@gadgetinc/react": "^0.25.0"
   },
   "devDependencies": {
     "@gadgetinc/core": "workspace:*",
