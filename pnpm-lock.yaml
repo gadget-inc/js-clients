@@ -139,8 +139,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(patch_hash=ucctwfdcmjhobzxki7ytrq6ei4)
       '@urql/core':
-        specifier: ^4.0.10
-        version: 4.0.10(graphql@16.8.1)
+        specifier: ^4.3.0
+        version: 4.3.0(graphql@16.8.1)
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
@@ -237,8 +237,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@urql/core':
-        specifier: ^6.0.1
-        version: 6.0.1(graphql@16.11.0)
+        specifier: ^4.3.0
+        version: 4.3.0(graphql@16.11.0)
     devDependencies:
       '@jest/globals':
         specifier: '*'
@@ -256,8 +256,8 @@ importers:
   packages/core:
     devDependencies:
       '@urql/core':
-        specifier: ^6.0.1
-        version: 6.0.1(graphql@16.11.0)
+        specifier: ^4.3.0
+        version: 4.3.0(graphql@16.11.0)
       conditional-type-checks:
         specifier: '>=1.0.0'
         version: 1.0.6
@@ -323,8 +323,8 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1(react-hook-form@7.62.0)
       '@urql/core':
-        specifier: ^6.0.1
-        version: 6.0.1(graphql@16.8.1)
+        specifier: ^4.3.0
+        version: 4.3.0(graphql@16.8.1)
       filesize:
         specifier: ^10.1.2
         version: 10.1.2
@@ -342,7 +342,7 @@ importers:
         version: 2.6.2
       urql:
         specifier: ^5.0.1
-        version: 5.0.1(@urql/core@6.0.1)(react@19.1.1)
+        version: 5.0.1(@urql/core@4.3.0)(react@19.1.1)
       yup:
         specifier: ^1.2.0
         version: 1.4.0
@@ -8542,8 +8542,16 @@ packages:
     dev: true
     optional: true
 
-  /@urql/core@4.0.10(graphql@16.8.1):
-    resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
+  /@urql/core@4.3.0(graphql@16.11.0):
+    resolution: {integrity: sha512-wT+FeL8DG4x5o6RfHEnONNFVDM3616ouzATMYUClB6CB+iIu2mwfBKd7xSUxYOZmwtxna5/hDRQdMl3nbQZlnw==}
+    dependencies:
+      '@0no-co/graphql.web': 1.2.0(graphql@16.11.0)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
+
+  /@urql/core@4.3.0(graphql@16.8.1):
+    resolution: {integrity: sha512-wT+FeL8DG4x5o6RfHEnONNFVDM3616ouzATMYUClB6CB+iIu2mwfBKd7xSUxYOZmwtxna5/hDRQdMl3nbQZlnw==}
     dependencies:
       '@0no-co/graphql.web': 1.2.0(graphql@16.8.1)
       wonka: 6.3.2
@@ -8558,15 +8566,6 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
-
-  /@urql/core@6.0.1(graphql@16.8.1):
-    resolution: {integrity: sha512-FZDiQk6jxbj5hixf2rEPv0jI+IZz0EqqGW8mJBEug68/zHTtT+f34guZDmyjJZyiWbj0vL165LoMr/TkeDHaug==}
-    dependencies:
-      '@0no-co/graphql.web': 1.2.0(graphql@16.8.1)
-      wonka: 6.3.2
-    transitivePeerDependencies:
-      - graphql
-    dev: false
 
   /@urql/preact@5.0.0(@urql/core@6.0.1)(preact@10.27.2):
     resolution: {integrity: sha512-mGQQB9vfRHRGZb+U5le6ZwlblIMNOZSQCOwnABCMEY0LNM79N6pvoih/KOs/kwwAd7jrHMDk74q9TsgdrmyWEw==}
@@ -16888,13 +16887,13 @@ packages:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}
     dev: true
 
-  /urql@5.0.1(@urql/core@6.0.1)(react@19.1.1):
+  /urql@5.0.1(@urql/core@4.3.0)(react@19.1.1):
     resolution: {integrity: sha512-r58gYlWvCTC19QvkTaARaCLV9/bp870byH/qbLaw3S7f8i/bC6x2Szub8RVXptiMxWmqq5dyVBjUL9G+xPEuqg==}
     peerDependencies:
       '@urql/core': ^6.0.0
       react: '>= 16.8.0'
     dependencies:
-      '@urql/core': 6.0.1(graphql@16.8.1)
+      '@urql/core': 4.3.0(graphql@16.8.1)
       react: 19.1.1
       wonka: 6.3.2
     dev: false
