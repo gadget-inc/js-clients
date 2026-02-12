@@ -26,3 +26,9 @@ packages/react/auto
 *storybook.log
 
 packages/react/cypress/screenshots/
+.ai/.lnai-manifest.json
+
+# lnai-generated
+.claude/CLAUDE.md
+AGENTS.md
+# end lnai-generated
