@@ -42,6 +42,7 @@ export const PolarisWCAutoRolesInput = autoInput((props: PolarisWCAutoRolesInput
     [options, searchValue]
   );
 
+  const { onChange } = fieldProps;
   const handleOptionClick = useCallback(
     (roleKey: string) => {
       const next = new Set(selectedRoleKeys);
@@ -50,16 +51,16 @@ export const PolarisWCAutoRolesInput = autoInput((props: PolarisWCAutoRolesInput
       } else {
         next.add(roleKey);
       }
-      fieldProps.onChange([...next]);
+      onChange([...next]);
     },
-    [fieldProps.onChange, selectedRoleKeys]
+    [onChange, selectedRoleKeys]
   );
 
   const handleDismissBadge = useCallback(
     (roleKey: string) => {
-      fieldProps.onChange(selectedRoleKeys.filter((k: string) => k !== roleKey));
+      onChange(selectedRoleKeys.filter((k: string) => k !== roleKey));
     },
-    [fieldProps.onChange, selectedRoleKeys]
+    [onChange, selectedRoleKeys]
   );
 
   const verticalContent = useMemo(() => {

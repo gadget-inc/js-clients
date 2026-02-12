@@ -38,19 +38,19 @@ export const PolarisWCAutoJSONInput = autoInput((props: PolarisWCAutoJSONInputPr
   // Ensure label is always a string
   const label: string = typeof props.label === "string" ? props.label : String(controllerLabel ?? "");
   const displayError = !isFocused && errorMessage ? `Invalid JSON: ${errorMessage}` : undefined;
-
+  const { onFocus, onBlur } = focusProps;
   const handleFocus = useCallback(
     (event: Event) => {
-      focusProps.onFocus?.(event as any);
+      onFocus?.(event as any);
     },
-    [focusProps.onFocus]
+    [onFocus]
   );
 
   const handleBlur = useCallback(
     (event: Event) => {
-      focusProps.onBlur?.(event as any);
+      onBlur?.(event as any);
     },
-    [focusProps.onBlur]
+    [onBlur]
   );
 
   return (

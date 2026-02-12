@@ -30,7 +30,7 @@ export const PolarisWCAutoFormSkeleton = () => (
 export type PolarisWCAutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 > = AutoFormProps<GivenOptions, SchemaT, ActionFunc>;
 
 /**
@@ -39,7 +39,7 @@ export type PolarisWCAutoFormProps<
 export const PolarisWCAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: PolarisWCAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
@@ -65,7 +65,7 @@ export const PolarisWCAutoForm = <
 const PolarisWCAutoFormComponent = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: PolarisWCAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {

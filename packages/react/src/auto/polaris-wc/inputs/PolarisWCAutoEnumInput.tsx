@@ -33,7 +33,7 @@ export const PolarisWCAutoEnumInput = autoInput((props: PolarisWCAutoEnumInputPr
   const inputLabel: string = typeof labelProp === "string" ? labelProp : String(label ?? "");
 
   // Single select: show selected value in input when not searching; otherwise show search text
-  const singleSelectInputValue = searchQuery.value !== "" ? searchQuery.value : selectedOptions[0] ?? "";
+  const singleSelectInputValue = searchQuery.value !== "" ? searchQuery.value : (selectedOptions[0] ?? "");
 
   const handleSingleInputChange = useCallback(
     (value: string) => {

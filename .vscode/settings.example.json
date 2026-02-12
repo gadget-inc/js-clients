@@ -4,7 +4,6 @@
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.requireConfig": true,
   "jest.autoRun": "off",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "[javascript]": {

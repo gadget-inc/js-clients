@@ -44,11 +44,11 @@ export const PolarisWCAutoBelongsToInput = autoInput((props: AutoRelationshipInp
       selectedOption && selectedOption.id
         ? { content: selectedOption.primary, key: `selectedRecordTag_${selectedOption.id}` }
         : danglingSelectedRecordId
-        ? {
-            content: <span style={{ color: "red" }}>id: {danglingSelectedRecordId}</span>,
-            key: `selectedRecordTag_${danglingSelectedRecordId}`,
-          }
-        : undefined;
+          ? {
+              content: <span style={{ color: "red" }}>id: {danglingSelectedRecordId}</span>,
+              key: `selectedRecordTag_${danglingSelectedRecordId}`,
+            }
+          : undefined;
 
     return tagConfig ? (
       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginTop: "8px" }}>

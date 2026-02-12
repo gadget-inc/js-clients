@@ -151,17 +151,18 @@ export const PolarisWCRelatedModelOptionsPopover = (
   }
 ) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { onScrolledToBottom } = props;
 
   const handleScroll = useCallback(() => {
-    if (!scrollContainerRef.current || !props.onScrolledToBottom) return;
+    if (!scrollContainerRef.current || !onScrolledToBottom) return;
 
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
     const isNearBottom = scrollTop + clientHeight >= scrollHeight - 50;
 
     if (isNearBottom) {
-      props.onScrolledToBottom();
+      onScrolledToBottom();
     }
-  }, [props.onScrolledToBottom]);
+  }, [onScrolledToBottom]);
 
   return (
     <PolarisWCPopover

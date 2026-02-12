@@ -39,13 +39,13 @@ export type PolarisWCTextInputPropsResult = {
  */
 export function usePolarisWCTextInputProps(props: PolarisWCTextInputPropsParams): PolarisWCTextInputPropsResult {
   const stringInputController = useStringInputController(props as AutoTextInputProps);
-
+  const { onChange } = stringInputController;
   const handleChange = useCallback(
     (event: Event) => {
       const target = event.currentTarget as HTMLInputElement & { value?: string };
-      stringInputController.onChange(target.value ?? "");
+      onChange(target.value ?? "");
     },
-    [stringInputController.onChange]
+    [onChange]
   );
 
   const label: string = typeof props.label === "string" ? props.label : String(stringInputController.metadata.name ?? "");

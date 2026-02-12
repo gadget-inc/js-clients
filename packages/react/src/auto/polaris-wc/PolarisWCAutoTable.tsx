@@ -55,7 +55,7 @@ export type PolarisWCAutoTableProps<
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 > = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>;
 
 /**
@@ -70,7 +70,7 @@ export const PolarisWCAutoTable = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: PolarisWCAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
@@ -87,7 +87,7 @@ const PolarisWCAutoTableComponent = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: PolarisWCAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {

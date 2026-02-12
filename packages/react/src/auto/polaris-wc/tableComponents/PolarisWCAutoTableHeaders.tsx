@@ -12,13 +12,13 @@ export const SortableTableHeader = (props: { column: TableColumn; isPrimary: boo
   const columnField = column.type === "CustomRenderer" ? column.identifier : column.field;
   const isSorted = sort.column === columnField;
   const isSortable = column.sortable && column.type !== "CustomRenderer";
-
+  const { handleColumnSort } = sort;
   useEffect(() => {
     const el = ref.current;
     if (!el || !isSortable || !columnField) return;
 
     const handleClick = () => {
-      sort.handleColumnSort(columnField);
+      handleColumnSort(columnField);
     };
 
     // Add cursor style for sortable columns
@@ -29,7 +29,7 @@ export const SortableTableHeader = (props: { column: TableColumn; isPrimary: boo
       el.removeEventListener("click", handleClick);
       el.style.cursor = "";
     };
-  }, [sort.handleColumnSort, columnField, isSortable]);
+  }, [handleColumnSort, columnField, isSortable]);
 
   const [isHovered, hoverProps] = useHover();
   // Sort indicator icon

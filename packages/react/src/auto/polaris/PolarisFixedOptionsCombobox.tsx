@@ -110,7 +110,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
         setInputValue(selectedValue[0] || "");
       }
     },
-    [callOnChange, options]
+    [callOnChange, options, allowMultiple]
   );
 
   const removeOption = useCallback(

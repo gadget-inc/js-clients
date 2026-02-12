@@ -13,7 +13,7 @@ declare let window: any;
 export const PolarisWCAutoButton = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
 >(
   props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & { id?: string; children?: React.ReactNode }
 ) => {

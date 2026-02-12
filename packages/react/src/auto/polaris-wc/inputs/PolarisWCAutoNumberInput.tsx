@@ -32,8 +32,8 @@ export const PolarisWCAutoNumberInput = autoInput((props: PolarisWCAutoNumberInp
     metadata.configuration.decimals > 0
       ? getStepFromNumberOfDecimals(metadata.configuration.decimals)
       : value
-      ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
-      : 1;
+        ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
+        : 1;
 
   return (
     <s-number-field

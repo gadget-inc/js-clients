@@ -30,10 +30,11 @@ export const PolarisWCSubmitResultBanner = (props: PolarisWCSubmitResultBannerPr
 export const PolarisWCSubmitSuccessfulBanner = (props: PolarisWCBannerProps) => {
   const { show, hide, successful, title } = useResultBannerController();
 
+  const { onDismiss } = props;
   const handleDismiss = useCallback(() => {
     hide();
-    props.onDismiss?.();
-  }, [hide, props.onDismiss]);
+    onDismiss?.();
+  }, [hide, onDismiss]);
 
   if (!show || !successful) {
     return null;
@@ -49,10 +50,11 @@ export const PolarisWCSubmitSuccessfulBanner = (props: PolarisWCBannerProps) => 
 export const PolarisWCSubmitErrorBanner = (props: PolarisWCBannerProps) => {
   const { show, hide, successful, title } = useResultBannerController();
 
+  const { onDismiss } = props;
   const handleDismiss = useCallback(() => {
     hide();
-    props.onDismiss?.();
-  }, [hide, props.onDismiss]);
+    onDismiss?.();
+  }, [hide, onDismiss]);
 
   if (!show || successful) {
     return null;

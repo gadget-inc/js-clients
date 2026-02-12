@@ -26,7 +26,9 @@ export const PolarisWCTruncatedTextWithTooltip = (props: PolarisWCTruncatedTextW
     useScrollWidthCheck: true,
   });
 
-  useEffect(checkOverflow, [text]);
+  useEffect(() => {
+    checkOverflow();
+  }, [checkOverflow, text]);
 
   const [isHovering, hoverProps] = useHover();
 

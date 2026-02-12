@@ -14,15 +14,15 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
           singleRowCheckbox: (recordId: string | number) => `input[id="Select-${recordId}"]`,
         }
       : name === SUITE_NAMES.POLARIS_WC
-      ? {
-          selectAllCheckbox: `s-checkbox[id^="select-all-"]`,
-          singleRowCheckbox: (recordId: string | number) => `s-checkbox[id$="-${recordId}"]`,
-        }
-      : {
-          // SHADCN
-          selectAllCheckbox: `button[id="AutoTableSelectAllCheckbox"]`,
-          singleRowCheckbox: (recordId: string | number) => `button[id="AutoTableSingleRowCheckbox-${recordId}"]`,
-        };
+        ? {
+            selectAllCheckbox: `s-checkbox[id^="select-all-"]`,
+            singleRowCheckbox: (recordId: string | number) => `s-checkbox[id$="-${recordId}"]`,
+          }
+        : {
+            // SHADCN
+            selectAllCheckbox: `button[id="AutoTableSelectAllCheckbox"]`,
+            singleRowCheckbox: (recordId: string | number) => `button[id="AutoTableSingleRowCheckbox-${recordId}"]`,
+          };
 
   const mockModelMetadata = () => {
     cy.intercept(

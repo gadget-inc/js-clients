@@ -83,7 +83,7 @@ const PolarisWCAutoTableStory = <
   GivenOptions extends OptionsType,
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends FinderFunction["optionsType"]
+  Options extends FinderFunction["optionsType"],
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {

@@ -23,12 +23,13 @@ export const PolarisWCAutoBooleanInput = autoInput((props: PolarisWCAutoBooleanI
   const { field: _field, control: _control, disabled, label: _label, ...rest } = props;
   const { error, fieldProps, metadata } = useBooleanInputController(props);
 
+  const { onChange } = fieldProps;
   const handleChange = useCallback(
     (event: Event) => {
       const target = event.currentTarget as any;
-      fieldProps.onChange(target.checked ?? false);
+      onChange(target.checked ?? false);
     },
-    [fieldProps.onChange]
+    [onChange]
   );
 
   // Ensure label is always a string - metadata.name should be string but TypeScript infers it could be ReactNode

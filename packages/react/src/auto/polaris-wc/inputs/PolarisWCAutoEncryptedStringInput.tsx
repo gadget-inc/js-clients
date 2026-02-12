@@ -29,7 +29,7 @@ export const PolarisWCAutoEncryptedStringInput = autoInput((props: PolarisWCAuto
       const value =
         typeof eventOrValue === "string"
           ? eventOrValue
-          : (eventOrValue.currentTarget as HTMLInputElement & { value?: string })?.value ?? "";
+          : ((eventOrValue.currentTarget as HTMLInputElement & { value?: string })?.value ?? "");
       stringInputController.onChange(value);
     },
     [stringInputController.onChange]
