@@ -1,12 +1,10 @@
-import React, { useCallback, useMemo } from "react";
+import React, { type ComponentProps, useCallback, useMemo } from "react";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { autoInput } from "../../AutoInput.js";
 import { imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
-import { type AutoFileInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoFileInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 
-export type PolarisWCAutoFileInputProps = AutoFileInputProps & {
-  disabled?: boolean;
-};
+export type PolarisWCAutoFileInputProps = StringOnlyLabel<AutoFileInputProps> & Partial<ComponentProps<"s-drop-zone">>;
 
 /**
  * A file input within AutoForm using Polaris Web Components.
@@ -21,7 +19,7 @@ export type PolarisWCAutoFileInputProps = AutoFileInputProps & {
  * @returns The AutoFileInput component.
  */
 export const PolarisWCAutoFileInput = autoInput((props: PolarisWCAutoFileInputProps) => {
-  const { field: fieldApiIdentifier, control, disabled, ...rest } = props;
+  const { field: fieldApiIdentifier, control, disabled, label: _label, ...rest } = props;
 
   const {
     fieldProps,
@@ -82,7 +80,7 @@ export const PolarisWCAutoFileInput = autoInput((props: PolarisWCAutoFileInputPr
   }, [canClearFileValue, clearFileValue, fieldProps.value, imageThumbnailURL]);
 
   // Ensure label is always a string
-  const label: string = typeof props.label === "string" ? props.label : String(metadata.name ?? "");
+  const label: string = (props.label ?? String(metadata.name ?? "")) as string;
 
   return (
     <div style={{ position: "relative" }}>
@@ -93,6 +91,7 @@ export const PolarisWCAutoFileInput = autoInput((props: PolarisWCAutoFileInputPr
         label={label}
         error={errorMessage}
         required={metadata.requiredArgumentForInput}
+        {...rest}
       >
         {!filePreview && actionHintParts ? (
           <>

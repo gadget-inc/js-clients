@@ -1,14 +1,10 @@
-// import type * as PolarisTypes from "@shopify/polaris-types";
-import React, { useCallback } from "react";
+import React, { type ComponentProps, useCallback } from "react";
 import { useFocus } from "../../../useFocus.js";
 import { autoInput } from "../../AutoInput.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
-import { type AutoJSONInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoJSONInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 
-export type PolarisWCAutoJSONInputProps = AutoJSONInputProps & {
-  placeholder?: string;
-  disabled?: boolean;
-};
+export type PolarisWCAutoJSONInputProps = StringOnlyLabel<AutoJSONInputProps> & Partial<ComponentProps<"s-text-area">>;
 
 /**
  * A JSON editor within AutoForm using Polaris Web Components.
@@ -23,7 +19,7 @@ export type PolarisWCAutoJSONInputProps = AutoJSONInputProps & {
  * @returns The AutoJSONInput component
  */
 export const PolarisWCAutoJSONInput = autoInput((props: PolarisWCAutoJSONInputProps) => {
-  const { placeholder, disabled, ...restProps } = props;
+  const { placeholder, disabled, label: _label, ...restProps } = props;
   const [isFocused, focusProps] = useFocus();
   const { type: _type, id, errorMessage, label: controllerLabel, metadata, value, onChange } = useJSONInputController(restProps);
 
@@ -36,7 +32,7 @@ export const PolarisWCAutoJSONInput = autoInput((props: PolarisWCAutoJSONInputPr
   );
 
   // Ensure label is always a string
-  const label: string = typeof props.label === "string" ? props.label : String(controllerLabel ?? "");
+  const label: string = (props.label ?? String(controllerLabel ?? "")) as string;
   const displayError = !isFocused && errorMessage ? `Invalid JSON: ${errorMessage}` : undefined;
   const { onFocus, onBlur } = focusProps;
   const handleFocus = useCallback(
@@ -66,6 +62,7 @@ export const PolarisWCAutoJSONInput = autoInput((props: PolarisWCAutoJSONInputPr
       onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      {...restProps}
     />
   );
 });

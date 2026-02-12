@@ -1,11 +1,9 @@
-import React, { useCallback } from "react";
+import React, { type ComponentProps, useCallback } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useBooleanInputController } from "../../hooks/useBooleanInputController.js";
-import { type AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
+import type { StringOnlyLabel, AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
 
-export type PolarisWCAutoBooleanInputProps = AutoBooleanInputProps & {
-  disabled?: boolean;
-};
+export type PolarisWCAutoBooleanInputProps = StringOnlyLabel<AutoBooleanInputProps> & Partial<ComponentProps<"s-checkbox">>;
 
 /**
  * A boolean checkbox within AutoForm using Polaris Web Components.

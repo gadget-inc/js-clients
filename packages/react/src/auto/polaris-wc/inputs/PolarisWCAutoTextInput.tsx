@@ -1,15 +1,11 @@
-import React, { useCallback } from "react";
+import React, { type ComponentProps, useCallback } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
-import { type AutoTextInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoTextInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 
-export type PolarisWCAutoTextInputProps = AutoTextInputProps & {
-  type?: string;
-  step?: number;
-  min?: number;
-  placeholder?: string;
-  disabled?: boolean;
-};
+export type PolarisWCAutoTextInputProps = StringOnlyLabel<AutoTextInputProps> &
+  Partial<ComponentProps<"s-text-field">> &
+  Partial<Pick<ComponentProps<"input">, "step" | "min" | "type">>;
 
 export type PolarisWCTextInputPropsParams = (
   | AutoTextInputProps
@@ -48,7 +44,7 @@ export function usePolarisWCTextInputProps(props: PolarisWCTextInputPropsParams)
     [onChange]
   );
 
-  const label: string = typeof props.label === "string" ? props.label : String(stringInputController.metadata.name ?? "");
+  const label: string = (props.label ?? String(stringInputController.metadata.name ?? "")) as string;
 
   const textFieldProps: PolarisWCTextInputPropsResult["textFieldProps"] = {
     label,
@@ -76,11 +72,12 @@ export function usePolarisWCTextInputProps(props: PolarisWCTextInputPropsParams)
  * @returns The AutoTextInput component.
  */
 export const PolarisWCAutoTextInput = autoInput((props: PolarisWCAutoTextInputProps) => {
+  const { field: _field, label: _label, control: _control, ...rest } = props;
   const { textFieldProps, stringInputController } = usePolarisWCTextInputProps(props);
 
   const finalTextFieldProps: Record<string, unknown> = { ...textFieldProps, id: stringInputController.id };
 
-  return <s-text-field {...finalTextFieldProps} autocomplete="off" />;
+  return <s-text-field {...finalTextFieldProps} autocomplete="off" {...rest} />;
 });
 
 /**

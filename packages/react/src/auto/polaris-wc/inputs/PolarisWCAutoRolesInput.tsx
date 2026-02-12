@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
-import { type AutoRolesInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoRolesInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 import { PolarisWCDismissibleBadge } from "../commonComponents/PolarisWCDismissibleBadge.js";
 import { PolarisWCTruncatedTextWithTooltip } from "../commonComponents/PolarisWCTruncatedTextWithTooltip.js";
 import { PolarisWCCombobox, PolarisWCComboboxOption } from "./PolarisWCCombobox.js";
 
-export type PolarisWCAutoRolesInputProps = AutoRolesInputProps & {
+export type PolarisWCAutoRolesInputProps = StringOnlyLabel<AutoRolesInputProps> & {
   placeholder?: string;
   disabled?: boolean;
 };

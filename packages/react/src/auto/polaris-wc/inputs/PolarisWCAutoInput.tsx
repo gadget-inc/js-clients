@@ -2,7 +2,7 @@ import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { type AutoInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 import { PolarisWCAutoRichTextInput } from "./LazyLoadedPolarisWCAutoRichTextInput.js";
 import { PolarisWCAutoBooleanInput } from "./PolarisWCAutoBooleanInput.js";
 import { PolarisWCAutoDateTimePicker } from "./PolarisWCAutoDateTimePicker.js";
@@ -35,7 +35,7 @@ import { PolarisWCAutoHasOneInput } from "./relationships/PolarisWCAutoHasOneInp
  * @param props.label - Label of the component.
  * @returns The AutoInput component.
  */
-export const PolarisWCAutoInput = autoInput((props: AutoInputProps) => {
+export const PolarisWCAutoInput = autoInput((props: StringOnlyLabel<AutoInputProps>) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 

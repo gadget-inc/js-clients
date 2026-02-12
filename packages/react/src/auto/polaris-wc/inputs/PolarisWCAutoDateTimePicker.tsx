@@ -3,9 +3,9 @@ import { isValidDate, utcToZonedTime, zonedTimeToUtc } from "../../../dateTimeUt
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { autoInput } from "../../AutoInput.js";
 import { useDateTimeField } from "../../hooks/useDateTimeField.js";
-import type { AutoDateTimeInputProps } from "../../shared/AutoInputTypes.js";
+import type { AutoDateTimeInputProps, StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 
-export interface PolarisWCAutoDateTimePickerProps extends AutoDateTimeInputProps {
+export type PolarisWCAutoDateTimePickerProps = StringOnlyLabel<AutoDateTimeInputProps> & {
   /**
    * The HTML ID of the DateTime field.
    */
@@ -14,7 +14,7 @@ export interface PolarisWCAutoDateTimePickerProps extends AutoDateTimeInputProps
    * Hides the time input.
    */
   hideTime?: boolean;
-}
+};
 
 /**
  * A date and time picker within AutoForm using Polaris Web Components.

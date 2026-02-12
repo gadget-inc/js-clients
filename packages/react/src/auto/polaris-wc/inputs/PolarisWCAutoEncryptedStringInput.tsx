@@ -1,12 +1,10 @@
-import React, { useCallback } from "react";
+import React, { type ComponentProps, useCallback } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
-import { type AutoEncryptedStringInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoEncryptedStringInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 
-export type PolarisWCAutoEncryptedStringInputProps = AutoEncryptedStringInputProps & {
-  placeholder?: string;
-  disabled?: boolean;
-};
+export type PolarisWCAutoEncryptedStringInputProps = StringOnlyLabel<AutoEncryptedStringInputProps> &
+  Partial<ComponentProps<"s-password-field">>;
 
 /**
  * An encrypted string input within AutoForm using Polaris Web Components.
@@ -21,7 +19,7 @@ export type PolarisWCAutoEncryptedStringInputProps = AutoEncryptedStringInputPro
  * @returns The AutoEncryptedStringInput component.
  */
 export const PolarisWCAutoEncryptedStringInput = autoInput((props: PolarisWCAutoEncryptedStringInputProps) => {
-  const { placeholder, disabled, ...restProps } = props;
+  const { placeholder, disabled, label: _label, ...restProps } = props;
   const stringInputController = useStringInputController(restProps);
 
   const handleChange = useCallback(
@@ -36,7 +34,7 @@ export const PolarisWCAutoEncryptedStringInput = autoInput((props: PolarisWCAuto
   );
 
   // Ensure label is always a string
-  const label: string = typeof props.label === "string" ? props.label : String(stringInputController.metadata.name ?? "");
+  const label: string = (props.label ?? String(stringInputController.metadata.name ?? "")) as string;
 
   return (
     <>
@@ -50,6 +48,7 @@ export const PolarisWCAutoEncryptedStringInput = autoInput((props: PolarisWCAuto
         required={stringInputController.metadata.requiredArgumentForInput}
         error={stringInputController.errorMessage}
         onChange={handleChange}
+        {...restProps}
       />
       {/* Hidden native input for form registration and testability (Cypress can type into it; WC does not sync from shadow DOM to React in tests) */}
       <input

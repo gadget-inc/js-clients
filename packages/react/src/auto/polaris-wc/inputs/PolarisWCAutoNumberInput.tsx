@@ -1,13 +1,10 @@
-import React from "react";
+import React, { type ComponentProps } from "react";
 import { countNumberOfDecimals, getStepFromNumberOfDecimals } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
-import type { AutoNumberInputProps } from "../../shared/AutoInputTypes.js";
+import type { AutoNumberInputProps, StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 import { usePolarisWCTextInputProps } from "./PolarisWCAutoTextInput.js";
 
-export type PolarisWCAutoNumberInputProps = AutoNumberInputProps & {
-  placeholder?: string;
-  disabled?: boolean;
-};
+export type PolarisWCAutoNumberInputProps = StringOnlyLabel<AutoNumberInputProps> & Partial<ComponentProps<"s-number-field">>;
 
 /**
  * A number input within AutoForm using Polaris Web Components.

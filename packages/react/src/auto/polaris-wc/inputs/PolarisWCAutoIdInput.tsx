@@ -2,7 +2,7 @@ import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
-import { type AutoIdInputProps } from "../../shared/AutoInputTypes.js";
+import type { StringOnlyLabel, AutoIdInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisWCAutoTextInput } from "./PolarisWCAutoTextInput.js";
 
 /**
@@ -17,13 +17,13 @@ import { PolarisWCAutoTextInput } from "./PolarisWCAutoTextInput.js";
  * @param props.label - Label of the Id input.
  * @returns The AutoIdInput component
  */
-export const PolarisWCAutoIdInput = autoInput((props: AutoIdInputProps) => {
-  const { field, label } = props;
+export const PolarisWCAutoIdInput = autoInput((props: StringOnlyLabel<AutoIdInputProps>) => {
+  const { field, label, ...rest } = props;
   const { name, metadata } = useStringInputController({ field });
 
   if (metadata.fieldType !== FieldType.Id || field !== "id") {
     throw new Error(`PolarisWCAutoIdInput: field ${field} is not of type Id`);
   }
 
-  return <PolarisWCAutoTextInput step={1} field={field} min={1} type="number" label={label || "ID"} />;
+  return <PolarisWCAutoTextInput field={field} label={label || "ID"} min={1} step={1} type="number" {...rest} />;
 });

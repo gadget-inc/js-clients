@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
-import { type AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
+import { type AutoEnumInputProps, type StringOnlyLabel } from "../../shared/AutoInputTypes.js";
 import { PolarisWCDismissibleBadge } from "../commonComponents/PolarisWCDismissibleBadge.js";
 import { PolarisWCTruncatedTextWithTooltip } from "../commonComponents/PolarisWCTruncatedTextWithTooltip.js";
 import { PolarisWCCombobox, PolarisWCComboboxOption } from "./PolarisWCCombobox.js";
 
-export type PolarisWCAutoEnumInputProps = AutoEnumInputProps & {
+export type PolarisWCAutoEnumInputProps = StringOnlyLabel<AutoEnumInputProps> & {
   placeholder?: string;
   disabled?: boolean;
 };
