@@ -56,7 +56,7 @@
     "tiny-graphql-query-compiler": "workspace:*",
     "tsx": "^4.9.3",
     "typescript": "5.4.5",
-    "zx": "^7.2.3"
+    "zx": "^8.8.5"
   },
   "pnpm": {
     "overrides": {
