@@ -416,12 +416,18 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.7
         version: 1.1.7(@types/react-dom@19.1.7)(@types/react@19.1.10)(react-dom@19.1.1)(react@19.1.1)
+      '@shopify/app-bridge-types':
+        specifier: ^0.5.3
+        version: 0.5.3
       '@shopify/polaris':
         specifier: ^12.0.0
         version: 12.27.0(react-dom@19.1.1)(react@19.1.1)
       '@shopify/polaris-icons':
         specifier: ^8.1.0
         version: 8.11.1(react@19.1.1)
+      '@shopify/polaris-types':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@storybook/addon-essentials':
         specifier: ^8.6.14
         version: 8.6.14(@types/react@19.1.10)(storybook@8.6.14)
@@ -7194,6 +7200,12 @@ packages:
     resolution: {integrity: sha512-6LnQDfE5TP5RtlFFh/3S//9UmwS7rRsfDOHTPkZxvEZw5p+j0WfZcFnsq+ntr5Uc+xd3wZ0GZxt1GY1cm4/3bA==}
     dev: true
 
+  /@shopify/app-bridge-types@0.5.3:
+    resolution: {integrity: sha512-wj5pPqk4bQsFU6AQUo6SwyQ3zqBgodvxt7fWzRYakeHGG/YWeDv1uoNYjhSVm0jT80Wy18EObSMQTocUSgpqPA==}
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+    dev: true
+
   /@shopify/polaris-icons@8.11.1(react@19.1.1):
     resolution: {integrity: sha512-2HLzvJWMejKIwS5P2bs7k5CAjBKwPnD/iy9ncPzcgqRjmFInBXLtUXFQhPWDw6JwXzb1ZjNQK/ssTctcfz87Sw==}
     engines: {node: ^16.17.0 || >=18.12.0}
@@ -7211,6 +7223,10 @@ packages:
     engines: {node: ^16.17.0 || >=18.12.0}
     dependencies:
       deepmerge: 4.3.1
+    dev: true
+
+  /@shopify/polaris-types@1.0.1:
+    resolution: {integrity: sha512-BZs47atXnaOVqFrCfTeXc6Vz8Vk8Vpj9o3nx/lYTvy9i4pPvd4K4mRKIhjrer2NWITCMvY6+nZ6GE1I9Qfq4rQ==}
     dev: true
 
   /@shopify/polaris@12.27.0(react-dom@19.1.1)(react@19.1.1):
@@ -7321,6 +7337,10 @@ packages:
 
   /@sinonjs/text-encoding@0.7.2:
     resolution: {integrity: sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==}
+    dev: true
+
+  /@standard-schema/spec@1.1.0:
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
     dev: true
 
   /@standard-schema/utils@0.3.0:

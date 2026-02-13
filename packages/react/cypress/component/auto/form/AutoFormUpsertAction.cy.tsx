@@ -2,24 +2,55 @@ import React from "react";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter("AutoForm - ID field", ({ name, adapter: { AutoForm }, wrapper }) => {
   it("does not render an input for ID when the action is not upsert", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["name", "inventoryCount", "id"]} />, wrapper);
 
-    cy.contains("Name").should("exist");
-    cy.get(`input[name="widget.name"]`).should("exist");
-
-    cy.contains("Inventory count").should("exist");
-    cy.get(`input[name="widget.inventoryCount"]`).should("exist");
-
-    cy.contains("ID").should("not.exist");
-    cy.get(`input[name="widget.id"]`).should("not.exist");
+    const containOpts = name === SUITE_NAMES.POLARIS_WC ? { includeShadowDom: true } : undefined;
+    if (containOpts) {
+      cy.contains("Name", containOpts).should("exist");
+      cy.get(`[id="widget.name"]`).shadow().find("input").should("exist");
+      cy.contains("Inventory count", containOpts).should("exist");
+      cy.get(`[id="widget.inventoryCount"]`).shadow().find("input").should("exist");
+      cy.contains("ID", containOpts).should("not.exist");
+      cy.get(`[id="widget.id"]`).should("not.exist");
+    } else {
+      cy.contains("Name").should("exist");
+      cy.get(`input[name="widget.name"]`).should("exist");
+      cy.contains("Inventory count").should("exist");
+      cy.get(`input[name="widget.inventoryCount"]`).should("exist");
+      cy.contains("ID").should("not.exist");
+      cy.get(`input[name="widget.id"]`).should("not.exist");
+    }
   });
 });
 
-describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoForm, AutoInput, AutoSubmit }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoForm, AutoInput, AutoSubmit }, wrapper, clickOptions }) => {
   let upsertHasBeenCalled: boolean;
+
+  const typeInField = (fieldId: string, text: string, clear = false) => {
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      const input = cy.get(`[id="${fieldId}"]`).shadow().find("input");
+      input.click(clickOptions);
+      if (clear) input.clear();
+      input.type(text);
+    } else {
+      cy.clickAndType(`input[name="${fieldId}"]`, text, clear);
+    }
+  };
+
+  const getInputByField = (fieldId: string) =>
+    name === SUITE_NAMES.POLARIS_WC ? cy.get(`[id="${fieldId}"]`).shadow().find("input") : cy.get(`input[name="${fieldId}"]`);
+
+  const getSubmitBtn = () =>
+    name === SUITE_NAMES.POLARIS_WC ? cy.get("form s-button[type=submit]") : cy.get("form [type=submit][aria-hidden!=true]");
+
+  const populateRequiredFields = () => {
+    typeInField("widget.name", "name", true);
+    typeInField("widget.inventoryCount", "123", true);
+  };
 
   const interceptModelUpsertActionMetadata = () => {
     cy.intercept(
@@ -70,11 +101,6 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
     }).as("widget");
   };
 
-  const populateRequiredFields = () => {
-    cy.clickAndType(`input[name="widget.name"]`, "name", true);
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "123", true);
-  };
-
   beforeEach(() => {
     upsertHasBeenCalled = false;
     cy.viewport("macbook-13");
@@ -84,20 +110,27 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
   it("renders the ID input field when there is no given findBy value", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.upsert} />, wrapper);
 
-    cy.contains("ID").should("exist");
-    cy.get(`input[name="widget.id"]`).should("exist");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.contains("ID", { includeShadowDom: true }).should("exist");
+      getInputByField("widget.id").should("exist");
+    } else {
+      cy.contains("ID").should("exist");
+      cy.get(`input[name="widget.id"]`).should("exist");
+    }
 
     mockSuccessfulUpsert();
     populateRequiredFields();
 
     // Does not allow submission when the ID input does not have a positive integer value
-    cy.clickAndType(`input[name="widget.id"]`, "-1", true);
+    typeInField("widget.id", "-1", true);
     if (upsertHasBeenCalled) throw new Error("Upsert was called when it shouldn't have been");
 
-    cy.clickAndType(`input[name="widget.id"]`, "1.1", true);
+    typeInField("widget.id", "1.1", true);
     if (upsertHasBeenCalled) throw new Error("Upsert was called when it shouldn't have been");
 
-    cy.get(`input[name="widget.id"]`).clear().type("1{enter}");
+    getInputByField("widget.id").clear().type("1");
+    getSubmitBtn().click(clickOptions);
+
     cy.wait("@upsertWidget")
       .its("request.body.variables")
       .should("deep.equal", {
@@ -113,8 +146,13 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
     mockSuccessfulWidgetFindBy();
     cy.mountWithWrapper(<AutoForm action={api.widget.upsert} findBy="1" />, wrapper);
 
-    cy.contains("ID").should("not.exist");
-    cy.get(`input[name="widget.id"]`).should("not.exist");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.contains("ID", { includeShadowDom: true }).should("not.exist");
+      cy.get(`[id="widget.id"]`).should("not.exist");
+    } else {
+      cy.contains("ID").should("not.exist");
+      cy.get(`input[name="widget.id"]`).should("not.exist");
+    }
   });
 
   it("Can exclude the ID field when there is no findBy and submit successfully", () => {
@@ -123,9 +161,14 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
 
     mockSuccessfulUpsert();
     populateRequiredFields();
-    cy.contains("ID").should("not.exist");
-    cy.get(`input[name="widget.id"]`).should("not.exist");
-    cy.get(`button[type="submit"]`).eq(0).click({ force: true });
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.contains("ID", { includeShadowDom: true }).should("not.exist");
+      cy.get(`[id="widget.id"]`).should("not.exist");
+    } else {
+      cy.contains("ID").should("not.exist");
+      cy.get(`input[name="widget.id"]`).should("not.exist");
+    }
+    getSubmitBtn().click(clickOptions);
 
     cy.wait("@upsertWidget")
       .its("request.body.variables")
@@ -158,7 +201,7 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
 
     populateRequiredFields();
 
-    cy.get(`button[type="submit"]`).eq(0).click({ force: true });
+    getSubmitBtn().click(clickOptions);
 
     cy.wait("@upsertWidget")
       .its("request.body.variables")

@@ -2,10 +2,11 @@ import React from "react";
 import { AutoHasManyThroughJoinModelForm } from "../../../../src/auto/hooks/useHasManyThroughController.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter(
   "AutoHasManyForm",
-  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyThroughForm }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyThroughForm }, wrapper, clickOptions }) => {
     const interceptModelUpdateActionMetadata = () => {
       cy.intercept(
         {
@@ -54,6 +55,25 @@ describeForEachAutoAdapter(
       ).as("students");
     };
 
+    const isWC = name === SUITE_NAMES.POLARIS_WC;
+    const containsOpts = isWC ? { includeShadowDom: true as const } : undefined;
+
+    /** Get the <input> inside a web component (by id) or a regular input (by id) */
+    const getInputById = (fieldId: string) => {
+      if (isWC) {
+        return cy.get(`[id="${fieldId}"]`).shadow().find("input");
+      }
+      return cy.get(`[id="${fieldId}"]`);
+    };
+
+    /** Get the <input> inside a web component (by id) or a regular input (by name) */
+    const getInputByName = (fieldName: string) => {
+      if (isWC) {
+        return cy.get(`[id="${fieldName}"]`).shadow().find("input");
+      }
+      return cy.get(`[name="${fieldName}"]`);
+    };
+
     beforeEach(() => {
       cy.viewport("macbook-13");
 
@@ -88,12 +108,12 @@ describeForEachAutoAdapter(
       cy.wait("@course");
       cy.wait("@students");
 
-      cy.contains("Add Students").click();
-      cy.contains("Emma Williams").click();
-      cy.contains("Add Students").click();
+      cy.contains("Add Students").click(clickOptions);
+      cy.contains("Emma Williams").click(clickOptions);
+      cy.contains("Add Students").click(clickOptions);
 
       cy.wait(1000);
-      cy.get('[id="deleteButton_students.0"]').click();
+      cy.get('[id="deleteButton_students.0"]').click(clickOptions);
       cy.wait(1000);
 
       expectUpdateActionSubmissionVariables({
@@ -133,13 +153,13 @@ describeForEachAutoAdapter(
         id: "3",
       });
 
-      cy.get('[id="submit"]').click();
-      cy.contains("Attempt is required").should("exist"); // Validation for blank field
+      cy.get('[id="submit"]').click(clickOptions);
+      cy.contains("Attempt is required", containsOpts).should("exist"); // Validation for blank field
 
-      cy.get('[id="course.registrations.0.attempt"]').type("1");
-      cy.get('[id="course.registrations.1.attempt"]').type("2");
+      getInputById("course.registrations.0.attempt").type("1");
+      getInputById("course.registrations.1.attempt").type("2");
 
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateCourse");
     });
 
@@ -165,12 +185,12 @@ describeForEachAutoAdapter(
       cy.wait("@students");
 
       cy.wait(1000);
-      cy.get('[id="deleteButton_students.0"]').click();
+      cy.get('[id="deleteButton_students.0"]').click(clickOptions);
       cy.wait(1000);
-      cy.get('[name="course.registrations.0.student.firstName"]').click().type("- updated");
-      cy.get('[name="course.registrations.0.student.lastName"]').click().type("- updated");
-      cy.get('[name="course.registrations.0.student.year"]').click().type("- updated");
-      cy.get('[name="course.registrations.0.student.year"]').click().type("1");
+      getInputByName("course.registrations.0.student.firstName").click(clickOptions).type("- updated");
+      getInputByName("course.registrations.0.student.lastName").click(clickOptions).type("- updated");
+      getInputByName("course.registrations.0.student.year").click(clickOptions).type("- updated");
+      getInputByName("course.registrations.0.student.year").click(clickOptions).type("1");
 
       expectUpdateActionSubmissionVariables({
         course: {
@@ -199,7 +219,7 @@ describeForEachAutoAdapter(
         },
         id: "3",
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateCourse");
     });
   }

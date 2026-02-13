@@ -68,6 +68,74 @@ before(() => {
       },
     } as any;
   });
+
+  // Load Polaris web components script if needed and wait for it to be ready
+  cy.window().then((win: any) => {
+    const existingScript = win.document.querySelector('script[src="https://cdn.shopify.com/shopifycloud/polaris.js"]');
+
+    if (!existingScript) {
+      return new Cypress.Promise<void>((resolve) => {
+        const script = win.document.createElement("script");
+        script.src = "https://cdn.shopify.com/shopifycloud/polaris.js";
+        script.async = true;
+        script.onload = () => {
+          // Wait for custom elements to be defined
+          const checkCustomElements = () => {
+            return win.customElements && win.customElements.get("s-button") !== undefined;
+          };
+
+          if (checkCustomElements()) {
+            resolve();
+            return;
+          }
+
+          const checkInterval = setInterval(() => {
+            if (checkCustomElements()) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 100);
+
+          // Timeout after 10 seconds
+          setTimeout(() => {
+            clearInterval(checkInterval);
+            resolve(); // Resolve anyway to not block tests
+          }, 10000);
+        };
+        script.onerror = () => {
+          console.error("Failed to load Polaris web components script");
+          resolve(); // Resolve anyway to not block tests
+        };
+        win.document.head.appendChild(script);
+      });
+    } else {
+      // Script already exists, check if custom elements are ready
+      return new Cypress.Promise<void>((resolve) => {
+        const checkCustomElements = () => {
+          return win.customElements && win.customElements.get("s-button") !== undefined;
+        };
+
+        if (checkCustomElements()) {
+          resolve();
+          return;
+        }
+
+        // Wait for custom elements to be defined
+        const checkInterval = setInterval(() => {
+          if (checkCustomElements()) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          resolve(); // Resolve anyway to not block tests
+        }, 10000);
+      });
+    }
+  });
 });
 
 beforeEach(() => {

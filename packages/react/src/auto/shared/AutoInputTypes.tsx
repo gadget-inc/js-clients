@@ -195,3 +195,8 @@ export interface AutoTextInputProps extends ControllableWithReactHookForm {
    */
   afterChange?: (...event: any[]) => void;
 }
+
+/** Replaces any existing `label` prop with `label?: string`; adds it if missing. */
+export type StringOnlyLabel<T extends object> = Omit<T, "label"> & {
+  label?: string;
+};

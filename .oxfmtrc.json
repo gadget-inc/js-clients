@@ -13,6 +13,7 @@
     "packages/*/dist",
     "packages/core/testing/package.json",
     "packages/react/auto/polaris/package.json",
+    "packages/react/auto/polaris-wc/package.json",
     "packages/react/auto/shadcn/package.json",
     "packages/shopify-extensions/preact/package.json",
     "packages/shopify-extensions/react/package.json"

@@ -4,36 +4,36 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrapper, clickOptions }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
 
   const submit = (modelName: string) => {
-    cy.get("form [type=submit][aria-hidden!=true]").click();
+    cy.get("form [type=submit][aria-hidden!=true]").click(clickOptions);
     cy.contains(`Saved ${modelName} successfully`);
   };
 
   const polarisAutoRoleInput = () => {
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click();
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click(clickOptions);
 
     // All options are loaded initially
     cy.get(`li[data-listbox-option-value="signed-in"]`).should("exist");
     cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("exist");
     cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).should("exist");
 
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().type("test"); // To search for "test-api-key"
-    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).click(); // select
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click(clickOptions).type("test"); // To search for "test-api-key"
+    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).click(clickOptions); // select
 
     cy.get(`li[data-listbox-option-value="signed-in"]`).should("not.exist"); // Filtered out by search
     cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("not.exist"); // Filtered out by search
 
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().clear().blur();
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click(clickOptions).clear().blur();
     cy.get(`span`).contains("test-api-key").should("exist"); // Chip to show the selected role
   };
 
   const shadcnAutoRoleInput = () => {
-    cy.get(`[cmdk-input]`).click(); // Click to focus the input field
+    cy.get(`[cmdk-input]`).click(clickOptions); // Click to focus the input field
 
     // All options should be loaded initially
     cy.get(`[cmdk-item][data-value="signed-in-signed-in"]`).should("exist");
@@ -49,7 +49,7 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
     cy.get(`[cmdk-item][data-value="unauthenticated-unauthenticated"]`).should("not.exist");
 
     // Select the filtered option
-    cy.get(`[cmdk-item][data-value="Role-abc123abc-test-api-key"]`).click();
+    cy.get(`[cmdk-item][data-value="Role-abc123abc-test-api-key"]`).click(clickOptions);
 
     // Verify that the chip/tag appears after selection
     cy.get(`div`)
@@ -59,6 +59,17 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
         // Verify that the close button exists within the chip
         cy.get(`button`).should("exist").and("be.visible");
       });
+  };
+
+  const polarisWCAutoRoleInput = () => {
+    // Open dropdown by focusing the input inside s-text-field shadow DOM (like AutoEnumInput / AutoBelongsToInput)
+    cy.get("s-text-field").first().shadow().find("input").click(clickOptions);
+    cy.get('[role="option"]').contains("test-api-key").should("exist");
+    cy.get('[role="option"]').contains("signed-in").should("exist");
+    cy.get("s-text-field").first().shadow().find("input").type("test");
+    cy.get('[role="option"]').contains("test-api-key").should("exist").click(clickOptions);
+    // Selected badge is inside the combobox s-text-field shadow DOM (like AutoBelongsToInput)
+    cy.get("s-text-field").first().shadow().find("s-badge").contains("test-api-key").should("exist");
   };
 
   const interceptRolesMetadataRequest = () => {
@@ -110,6 +121,10 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
 
     if (name === SUITE_NAMES.SHADCN) {
       shadcnAutoRoleInput();
+    }
+
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      polarisWCAutoRoleInput();
     }
 
     expectCreateActionSubmissionVariables({

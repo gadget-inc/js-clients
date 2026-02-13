@@ -2,6 +2,7 @@ import React from "react";
 import { get } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalGizmosLinkedToWidget = [
   { id: "1", name: "Gizmo 1", orientation: "up" },
@@ -10,7 +11,32 @@ const originalGizmosLinkedToWidget = [
 
 describeForEachAutoAdapter(
   "AutoHasManyForm",
-  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyForm }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyForm }, wrapper, clickOptions }) => {
+    const getInputByFieldId = (fieldId: string) =>
+      name === SUITE_NAMES.POLARIS_WC
+        ? cy.get(`[id="${fieldId}"]`, { timeout: 10000 }).shadow().find("input")
+        : cy.get(`input[id="${fieldId}"]`);
+
+    const typeInFieldById = (fieldId: string, text: string, clear = false) => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        const input = cy.get(`[id="${fieldId}"]`).shadow().find("input");
+        input.click(clickOptions);
+        if (clear) input.clear();
+        input.type(text);
+      } else {
+        cy.clickAndType(`input[id="${fieldId}"]`, text, clear);
+      }
+    };
+
+    /** In Polaris WC the row id is on a div; the expand handler is on an inner button, so we must click that button. */
+    const expandHasManyRow = (rowId: string) => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        cy.get(`[id="${rowId}"]`).find("button").first().click(clickOptions);
+      } else {
+        cy.get(`[id="${rowId}"]`).click(clickOptions);
+      }
+    };
+
     const interceptModelUpdateActionMetadata = () => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
         "ModelActionMetadata"
@@ -130,18 +156,18 @@ describeForEachAutoAdapter(
       cy.wait("@ModelActionMetadata");
       cy.wait("@widget");
 
-      cy.get('[id="gizmos.0"]').click();
-      cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
-      cy.get('input[id="widget.gizmos.0.orientation"]').should("exist").click().type(" - updated");
+      expandHasManyRow("gizmos.0");
+      getInputByFieldId("widget.gizmos.0.name").should("exist").click(clickOptions).type(" - updated");
+      getInputByFieldId("widget.gizmos.0.orientation").should("exist").click(clickOptions).type(" - updated");
 
-      cy.contains("Add Gizmo").click();
-      cy.get('input[id="widget.gizmos.2.name"]').should("exist").click().type("New gizmo");
-      cy.get('input[id="widget.gizmos.2.orientation"]').should("exist").click().type("New orientation");
-      cy.contains("Confirm").click();
+      cy.contains("Add Gizmo").click(clickOptions);
+      getInputByFieldId("widget.gizmos.2.name").should("exist").click(clickOptions).type("New gizmo");
+      getInputByFieldId("widget.gizmos.2.orientation").should("exist").click(clickOptions).type("New orientation");
+      cy.contains("Confirm").click(clickOptions);
 
-      cy.get('[id="gizmos.1"]').click();
-      cy.contains("Delete").click();
-      cy.contains("Confirm").click();
+      expandHasManyRow("gizmos.1");
+      cy.contains("Delete").click(clickOptions);
+      cy.contains("Confirm").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         expectedQueryValue: {
@@ -189,7 +215,7 @@ describeForEachAutoAdapter(
         "widget2"
       );
 
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget");
       cy.wait("@ModelActionMetadata");
       cy.wait("@widget2");
@@ -209,7 +235,7 @@ describeForEachAutoAdapter(
         },
         as: "updateWidget2",
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget2");
     });
 
@@ -232,15 +258,25 @@ describeForEachAutoAdapter(
       cy.wait("@ModelActionMetadata");
       cy.wait("@widget");
 
-      cy.get('[id="gizmos.0"]').click();
+      expandHasManyRow("gizmos.0");
 
-      cy.clickAndType('input[id="widget.gizmos.0.name"]', "Gizmo 1 - updated", true);
+      typeInFieldById("widget.gizmos.0.name", "Gizmo 1 - updated", true);
 
-      cy.contains("Add Doodad").should("exist").parent().click();
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        // PolarisWC: "Add Doodad" text is inside <s-text> shadow DOM; use includeShadowDom to find it, then click the parent <button>
+        cy.contains("Add Doodad", { includeShadowDom: true }).closest("button").click(clickOptions);
 
-      cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click().type(" - updated");
-      cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click();
-      cy.contains("Confirm").click();
+        // The nested input id is widget.gizmos.0.doodads.0.name; getInputByFieldId handles shadow DOM with 10s timeout
+        getInputByFieldId("widget.gizmos.0.doodads.0.name").should("exist").click(clickOptions).type(" - updated");
+        cy.get("s-button[id='confirmButton_gizmos.doodads.0']").shadow().find("button").should("exist").click(clickOptions);
+        cy.contains("Confirm").click(clickOptions);
+      } else {
+        cy.contains("Add Doodad").should("exist").parent().click(clickOptions);
+
+        cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click(clickOptions).type(" - updated");
+        cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click(clickOptions);
+        cy.contains("Confirm").click(clickOptions);
+      }
 
       expectUpdateActionSubmissionVariables({
         expectedQueryValue: {
@@ -260,7 +296,7 @@ describeForEachAutoAdapter(
           },
         },
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget");
     });
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalDoodadLinkedToWidget = {
   id: "1",
@@ -13,7 +14,7 @@ const originalDoodadLinkedToWidget = {
 
 describeForEachAutoAdapter(
   "AutoHasOneForm",
-  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasOneForm }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasOneForm }, wrapper, clickOptions }) => {
     const interceptModelUpdateActionMetadata = () => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
         "ModelCreateActionMetadata"
@@ -91,6 +92,17 @@ describeForEachAutoAdapter(
       ).as("gizmos");
     };
 
+    const typeInFieldById = (fieldId: string, text: string, clear = false) => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        const input = cy.get(`[id="${fieldId}"]`).shadow().find("input");
+        input.click(clickOptions);
+        if (clear) input.clear();
+        input.type(text);
+      } else {
+        cy.clickAndType(`input[id="${fieldId}"]`, text, clear);
+      }
+    };
+
     beforeEach(() => {
       cy.viewport("macbook-13");
 
@@ -128,11 +140,11 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.contains("Doodad 1").click();
+      cy.contains("Doodad 1").click(clickOptions);
 
-      cy.clickAndType('input[id="widget.doodad.name"]', "Doodad 1 - updated", true);
-      cy.clickAndType('input[id="widget.doodad.weight"]', "333123", true);
-      cy.contains("Confirm").click();
+      typeInFieldById("widget.doodad.name", "Doodad 1 - updated", true);
+      typeInFieldById("widget.doodad.weight", "333123", true);
+      cy.contains("Confirm").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -140,7 +152,7 @@ describeForEachAutoAdapter(
           doodad: { update: { active: true, id: "1", name: "Doodad 1 - updated", size: "Large", weight: 333123 } },
         },
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget");
     });
 
@@ -173,8 +185,8 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.contains("Doodad 1").click();
-      cy.contains("Remove").click();
+      cy.contains("Doodad 1").click(clickOptions);
+      cy.contains("Remove").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -182,7 +194,7 @@ describeForEachAutoAdapter(
           doodad: { _unlink: "1" },
         },
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget");
     });
 
@@ -215,14 +227,19 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.contains("Doodad 1").click();
+      cy.contains("Doodad 1").click(clickOptions);
 
-      cy.contains("Remove").click();
-      cy.contains("Add Doodad").click();
+      cy.contains("Remove").click(clickOptions);
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        // PolarisWC: "Add Doodad" text is inside <s-text> shadow DOM; use includeShadowDom to find it, then click the parent <button>
+        cy.contains("Add Doodad", { includeShadowDom: true }).closest("button").click(clickOptions);
+      } else {
+        cy.contains("Add Doodad").click(clickOptions);
+      }
 
-      cy.clickAndType('input[id="widget.doodad.name"]', "NEW Doodad", true);
-      cy.clickAndType('input[id="widget.doodad.weight"]', "987654321", true);
-      cy.contains("Confirm").click();
+      typeInFieldById("widget.doodad.name", "NEW Doodad", true);
+      typeInFieldById("widget.doodad.weight", "987654321", true);
+      cy.contains("Confirm").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -230,7 +247,7 @@ describeForEachAutoAdapter(
           doodad: { _unlink: "1", create: { name: "NEW Doodad", weight: 987654321, active: null, size: null } },
         },
       });
-      cy.get('[id="submit"]').click();
+      cy.get('[id="submit"]').click(clickOptions);
       cy.wait("@updateWidget");
     });
   }

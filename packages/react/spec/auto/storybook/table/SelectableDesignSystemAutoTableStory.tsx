@@ -4,8 +4,10 @@ import { BlockStack, Box, LegacyCard } from "@shopify/polaris";
 import React from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
 import { type AutoTableProps } from "../../../../src/auto/AutoTable.js";
+import { PolarisWCAutoTable } from "../../../../src/auto/polaris-wc/PolarisWCAutoTable.js";
 import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
 import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
+import { PolarisWCAutoComponentsStory } from "../../polaris-wc/PolarisWCAutoComponentsStory.js";
 import { elements } from "../../shadcn-defaults/index.js";
 import { DesignSystemSelectionControl, ShadcnAutoComponentsThemeControlWrapper, useDesignSystem } from "../SelectableDesignSystemUtils.js";
 
@@ -21,6 +23,7 @@ export const SelectableDesignSystemAutoTableStory = <
     <DesignSystemSelectionControl>
       <PolarisAutoTableStory {...props} />
       <ShadcnAutoTableStory {...props} />
+      <PolarisWCAutoTableStory {...props} />
     </DesignSystemSelectionControl>
   );
 };
@@ -73,5 +76,28 @@ const ShadcnAutoTableStory = <
         <ShadcnAutoTable {...props} />
       </div>
     </ShadcnAutoComponentsThemeControlWrapper>
+  );
+};
+
+const PolarisWCAutoTableStory = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  Options extends FinderFunction["optionsType"],
+>(
+  props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
+) => {
+  const { designSystem } = useDesignSystem();
+
+  if (designSystem !== SUITE_NAMES.POLARIS_WC) {
+    return null;
+  }
+
+  return (
+    <PolarisWCAutoComponentsStory>
+      <div style={{ width: "100%", padding: "16px" }}>
+        <PolarisWCAutoTable {...props} />
+      </div>
+    </PolarisWCAutoComponentsStory>
   );
 };

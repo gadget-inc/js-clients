@@ -4,19 +4,48 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper, clickOptions }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
 
   const ensureFieldInputLabelsExist = () => {
-    cy.contains("Name");
-    cy.contains("Inventory count");
-    cy.contains("Anything");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      // PolarisWC renders labels inside shadow DOM; check label attributes instead
+      cy.get('[label="Name"]').should("exist");
+      cy.get('[label="Inventory count"]').should("exist");
+      cy.get('[label="Anything"]').should("exist");
+    } else {
+      cy.contains("Name");
+      cy.contains("Inventory count");
+      cy.contains("Anything");
+    }
   };
 
+  const typeInField = (fieldId: string, text: string, clear = false) => {
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      const input = cy.get(`[id="${fieldId}"]`).shadow().find("input");
+      input.click(clickOptions);
+      if (clear) input.clear();
+      input.type(text);
+      input.blur();
+    } else {
+      cy.clickAndType(`input[name="${fieldId}"]`, text, clear);
+    }
+  };
+
+  const getInputByField = (fieldId: string) => {
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      return cy.get(`[id="${fieldId}"]`).shadow().find("input");
+    }
+    return cy.get(`input[name="${fieldId}"]`);
+  };
+
+  const getSubmitBtn = () =>
+    name === SUITE_NAMES.POLARIS_WC ? cy.get("form s-button[type=submit]") : cy.get("form [type=submit][aria-hidden!=true]");
+
   const submit = (modelName: string) => {
-    cy.get("form [type=submit][aria-hidden!=true]").click();
+    getSubmitBtn().click(clickOptions);
     cy.contains(`Saved ${modelName} successfully`, { timeout: 10000 });
   };
 
@@ -37,29 +66,34 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     ensureFieldInputLabelsExist();
 
-    cy.clickAndType(`input[name="widget.name"]`, "test record");
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
+    typeInField("widget.name", "test record");
+    typeInField("widget.inventoryCount", "999");
 
     submit("Widget");
     ensureFieldInputLabelsExist();
 
     // Ensure that the form is cleared after submitting the create action
-    cy.get(`input[name="widget.name"]`).should("have.value", "");
-    cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "");
+    getInputByField("widget.name").should("have.value", "");
+    getInputByField("widget.inventoryCount").should("have.value", "");
 
     // Ensure that the success banner can be closed
-    cy.get(`button[aria-label="Dismiss notification"]`).click();
-    cy.contains(`Saved Widget successfully`).should("not.exist");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get("s-banner").shadow().find("s-button").first().click(clickOptions);
+      cy.get("s-banner").should("not.exist");
+    } else {
+      cy.get(`button[aria-label="Dismiss notification"]`).first().click(clickOptions);
+      cy.contains(`Saved Widget successfully`).should("not.exist");
+    }
   });
 
   it("onSuccess callback should return a record result after the form submission", () => {
     const onSuccessSpy = cy.spy().as("onSuccessSpy");
     cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} onSuccess={onSuccessSpy} />, wrapper);
 
-    cy.clickAndType(`input[name="widget.name"]`, "test record");
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
+    typeInField("widget.name", "test record");
+    typeInField("widget.inventoryCount", "999");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
 
     cy.contains(`Saved Widget successfully`).should("not.exist");
 
@@ -77,10 +111,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     const onFailureSpy = cy.spy().as("onFailureSpy");
     cy.mountWithWrapper(<AutoForm action={api.widget.alwaysThrowError} exclude={["gizmos"]} onFailure={onFailureSpy} />, wrapper);
 
-    cy.clickAndType(`input[name="widget.name"]`, "test record");
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
+    typeInField("widget.name", "test record");
+    typeInField("widget.inventoryCount", "999");
 
-    cy.getSubmitButton().click();
+    getSubmitBtn().click(clickOptions);
 
     cy.contains(`Saved Widget successfully`).should("not.exist");
 
@@ -126,7 +160,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
     cy.contains("GGT_INVALID_JSON_DEFAULT: Invalid JSON default, cannot apply to record");
-    cy.getSubmitButton().should("not.exist");
+    getSubmitBtn().should("not.exist");
   });
 
   it("can render a form to update model and submit it", () => {
@@ -168,16 +202,26 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     cy.mountWithWrapper(<AutoForm action={api.widget.update} exclude={["gizmos"]} findBy="999" />, wrapper);
 
-    cy.contains("Name");
-    cy.contains("Inventory count");
-    cy.contains("Anything");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get('[label="Name"]').should("exist");
+      cy.get('[label="Inventory count"]').should("exist");
+      cy.get('[label="Anything"]').should("exist");
+    } else {
+      cy.contains("Name");
+      cy.contains("Inventory count");
+      cy.contains("Anything");
+    }
 
     // Clear the fetched value to prevent from making the value stored in the database longer as the test runs
-    cy.clickAndType(`input[name="widget.name"]`, "updated test record", true);
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "1234", true);
-    cy.clickAndType(`input[name="widget.section"]`, "Section Foo", true);
+    typeInField("widget.name", "updated test record", true);
+    typeInField("widget.inventoryCount", "1234", true);
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get("s-text-field#widget\\.section-input").shadow().find("input").click(clickOptions).clear().type("Section Foo");
+    } else {
+      cy.clickAndType(`input[name="widget.section"]`, "Section Foo", true);
+    }
 
-    cy.contains(`Section Foo`).click();
+    cy.contains(`Section Foo`).click(clickOptions);
     /**
      * This relies on the existence of `section` model record with {id:1, name:"Section Foo"}
      * This proves the selection of the correct record
@@ -185,6 +229,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     if (name === SUITE_NAMES.SHADCN) {
       cy.get('[cmdk-item][data-value="1-Section Foo"]');
+    } else if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get('button[role="option"]').contains("Section Foo");
     } else {
       cy.get(`[id="1_Section Foo"]`);
     }
@@ -192,15 +238,19 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     submit("Widget");
 
     // Ensure that the form values remain after submitting the update action
-    cy.get(`input[name="widget.name"]`).should("have.value", "updated test record");
-    cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "1234");
+    getInputByField("widget.name").should("have.value", "updated test record");
+    getInputByField("widget.inventoryCount").should("have.value", "1234");
   });
 
   it("can render a form to create namespaced model", () => {
     cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} exclude={["rounds"]} />, wrapper);
 
-    cy.contains("Name");
-    cy.clickAndType(`input[name="stadium.name"]`, "test stadium record");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get('[label="Name"]').should("exist");
+    } else {
+      cy.contains("Name");
+    }
+    typeInField("stadium.name", "test stadium record");
 
     submit("Stadium");
   });
@@ -211,18 +261,27 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
 
     // fill in name but not inventoryCount
-    cy.clickAndType(`input[name="widget.name"]`, "test record");
+    typeInField("widget.name", "test record");
 
-    cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("Inventory count is required");
+    getSubmitBtn().click(clickOptions);
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      // PolarisWC renders field errors inside shadow DOM via the error attribute
+      cy.get('[id="widget.inventoryCount"]').should("have.attr", "error", "Inventory count is required");
+    } else {
+      cy.contains("Inventory count is required");
+    }
 
-    cy.clickAndType(`input[name="widget.inventoryCount"]`, "42");
+    typeInField("widget.inventoryCount", "42");
 
-    cy.clickAndType(`input[name="widget.mustBeLongString"]`, "short");
+    typeInField("widget.mustBeLongString", "short");
 
-    cy.contains("must be at least 20 characters");
+    if (name === SUITE_NAMES.POLARIS_WC) {
+      cy.get('[id="widget.mustBeLongString"]').should("have.attr", "error").and("include", "must be at least 20 characters");
+    } else {
+      cy.contains("must be at least 20 characters");
+    }
 
-    cy.clickAndType(`input[name="widget.mustBeLongString"]`, ` l${"o".repeat(20)}ng enough`);
+    typeInField("widget.mustBeLongString", ` l${"o".repeat(20)}ng enough`);
 
     submit("Widget");
   });
@@ -230,7 +289,11 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("can render a rich text editor for markdown content", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["description"]} />, wrapper);
 
-    cy.clickAndType(`[aria-label="editable markdown"] > p`, "# foobar\n## foobaz");
+    const richTextSelector =
+      name === SUITE_NAMES.POLARIS_WC
+        ? "s-rich-text-editor [contenteditable=true], [aria-label='editable markdown'] > p"
+        : "[aria-label='editable markdown'] > p";
+    cy.get(richTextSelector).first().click(clickOptions).type("# foobar\n## foobaz");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
       body: {

@@ -61,7 +61,12 @@ describe("Select<>", () => {
 
   type _connectionSelection = Select<
     TestSchema,
-    { someConnection: { pageInfo: { hasNextPage: true }; edges: { node: { id: true; state: true } } } }
+    {
+      someConnection: {
+        pageInfo: { hasNextPage: true };
+        edges: { node: { id: true; state: true } };
+      };
+    }
   >;
   type _TestSelectingConnection = AssertTrue<
     IsExact<
@@ -77,7 +82,13 @@ describe("Select<>", () => {
 
   type _fieldCallSelection = Select<
     TestSchemaWithFieldCalls,
-    { fieldCall: { [$args]: { arg: [1, 2, 3]; limit: 10 }; nestedField1: true; nestedField2: { nestedField3: true } } }
+    {
+      fieldCall: {
+        [$args]: { arg: [1, 2, 3]; limit: 10 };
+        nestedField1: true;
+        nestedField2: { nestedField3: true };
+      };
+    }
   >;
   type _TestSelectingFieldCall = AssertTrue<
     IsExact<_fieldCallSelection, { fieldCall: { nestedField1: number; nestedField2: { nestedField3: string } } }>

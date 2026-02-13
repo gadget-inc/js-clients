@@ -3,6 +3,7 @@ import React from "react";
 import { humanizeCamelCase } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const widgetFieldApiIds = [
   "name",
@@ -36,7 +37,12 @@ describeForEachAutoAdapter("AutoForm - input labels", ({ name, adapter: { AutoFo
     );
 
     for (const fieldApiId of widgetFieldApiIds) {
-      cy.contains(fieldApiId + "_CustomLabel").should("exist");
+      // PolarisWC: label may be in shadow DOM (s-text-field) or light DOM (e.g. RichText); includeShadowDom finds both
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        cy.contains(fieldApiId + "_CustomLabel", { includeShadowDom: true }).should("exist");
+      } else {
+        cy.contains(fieldApiId + "_CustomLabel").should("exist");
+      }
     }
   });
 
@@ -51,7 +57,12 @@ describeForEachAutoAdapter("AutoForm - input labels", ({ name, adapter: { AutoFo
     );
 
     for (const fieldName of widgetFieldNames) {
-      cy.contains(humanizeCamelCase(fieldName)).should("exist");
+      // PolarisWC: label may be in shadow DOM (s-text-field) or light DOM (e.g. RichText); includeShadowDom finds both
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        cy.contains(humanizeCamelCase(fieldName), { includeShadowDom: true }).should("exist");
+      } else {
+        cy.contains(humanizeCamelCase(fieldName)).should("exist");
+      }
     }
   });
 });

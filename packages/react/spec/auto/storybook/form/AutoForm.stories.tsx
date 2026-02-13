@@ -98,7 +98,7 @@ export const IncludedWithFindBy: any = {
   args: {
     action: api.widget.update,
     findBy: "999",
-    include: ["name", "inventoryCount"],
+    include: ["name", "inventoryCount", "category"],
   },
 };
 

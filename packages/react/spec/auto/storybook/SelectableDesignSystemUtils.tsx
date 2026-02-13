@@ -39,14 +39,14 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
         const isPolaris = viteDevId.includes("polaris") && viteDevId.includes("styles.css");
         const isShadcn = viteDevId.includes("shadcn-tailwind.css");
 
-        // Disable Polaris when Shadcn is active
+        // Disable Polaris when Shadcn is active (but not when PolarisWC is active)
         if (isPolaris) {
           sheet.disabled = designSystem === SUITE_NAMES.SHADCN;
         }
 
-        // Disable Shadcn when Polaris is active
+        // Disable Shadcn when Polaris or PolarisWC is active
         if (isShadcn) {
-          sheet.disabled = designSystem === SUITE_NAMES.POLARIS;
+          sheet.disabled = designSystem === SUITE_NAMES.POLARIS || designSystem === SUITE_NAMES.POLARIS_WC;
         }
       } catch (e) {
         // Cross-origin stylesheets may throw errors, ignore them
@@ -64,6 +64,10 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
 
           <Button onClick={() => updateDesignSystem(SUITE_NAMES.POLARIS)}>
             {designSystem === SUITE_NAMES.POLARIS ? "✅ " : ""}Polaris
+          </Button>
+
+          <Button onClick={() => updateDesignSystem(SUITE_NAMES.POLARIS_WC)}>
+            {designSystem === SUITE_NAMES.POLARIS_WC ? "✅ " : ""}Polaris WC
           </Button>
         </div>
 

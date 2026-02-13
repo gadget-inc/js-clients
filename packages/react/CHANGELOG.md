@@ -1,5 +1,11 @@
 # @gadgetinc/react
 
+## 0.25.0
+
+### Changes
+
+- Released new Polaris web components based version of AutoComponents
+
 ## 0.23.4
 
 ### Patch Changes

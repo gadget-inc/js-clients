@@ -34,7 +34,7 @@ export const useTagsForTableCellRenderer = (props: {
         .map((tag) => (maxTagLength && tag.length > maxTagLength ? tag.slice(0, maxTagLength) + "…" : tag)),
       originalLength: formattedTags.length,
     };
-  }, [value]);
+  }, [value, maxTagCount, maxTagLength]);
 
   return {
     allTags,

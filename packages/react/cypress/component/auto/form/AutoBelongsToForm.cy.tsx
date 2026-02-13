@@ -7,7 +7,7 @@ const originalSectionLinkedToWidget = { id: "1", name: "Section 1", label: "Labe
 
 describeForEachAutoAdapter(
   "AutoBelongsToForm",
-  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm }, wrapper }) => {
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm }, wrapper, clickOptions }) => {
     const interceptModelUpdateActionMetadata = () => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
         "ModelCreateActionMetadata"
@@ -15,7 +15,24 @@ describeForEachAutoAdapter(
     };
 
     const getDropdownMenuTriggerSelector = () => {
-      return name == SUITE_NAMES.SHADCN ? "[data-testid='widget.section-dropdown-menu-trigger']" : ".Polaris-Button__Icon";
+      if (name === SUITE_NAMES.SHADCN) return "[data-testid='widget.section-dropdown-menu-trigger']";
+      if (name === SUITE_NAMES.POLARIS_WC) return 's-button[icon="menu-vertical"]';
+      return ".Polaris-Button__Icon";
+    };
+
+    const escapeCssId = (id: string) => id.replace(/([ !"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, "\\$1");
+
+    /** Type into a field; for Polaris WC the input is inside s-text-field shadow DOM. */
+    const typeInField = (fieldId: string, text: string, clear = false) => {
+      if (name === SUITE_NAMES.POLARIS_WC) {
+        const escapedId = escapeCssId(fieldId);
+        const input = cy.get(`s-text-field#${escapedId}`).shadow().find("input");
+        input.click(clickOptions);
+        if (clear) input.clear();
+        input.type(text);
+      } else {
+        cy.clickAndType(`input[id="${fieldId}"]`, text, clear);
+      }
     };
 
     const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
@@ -123,13 +140,13 @@ describeForEachAutoAdapter(
       cy.contains("Section 1"); // primary label
       cy.contains("Label 1"); // secondary label
 
-      cy.get(getDropdownMenuTriggerSelector()).first().click();
-      cy.contains("Edit section").click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click(clickOptions);
+      cy.contains("Edit section").click(clickOptions);
 
-      cy.clickAndType('input[id="widget.section.name"]', "Section 1 - updated", true);
-      cy.clickAndType('input[id="widget.section.label"]', "Label 1 - updated", true);
+      typeInField("widget.section.name", "Section 1 - updated", true);
+      typeInField("widget.section.label", "Label 1 - updated", true);
 
-      cy.contains("Save").click();
+      cy.contains("Save").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -137,7 +154,7 @@ describeForEachAutoAdapter(
           section: { update: { id: "1", name: "Section 1 - updated", label: "Label 1 - updated" } },
         },
       });
-      cy.get('[id="submit"]').click();
+      (name === SUITE_NAMES.POLARIS_WC ? cy.get("s-button[id=submit]") : cy.get('[id="submit"]')).click(clickOptions);
       cy.wait("@updateWidget");
     });
 
@@ -166,8 +183,8 @@ describeForEachAutoAdapter(
       cy.contains("Section 1"); // primary label
       cy.contains("Label 1"); // secondary label
 
-      cy.get(getDropdownMenuTriggerSelector()).first().click();
-      cy.contains("Remove section").click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click(clickOptions);
+      cy.contains("Remove section").click(clickOptions);
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -175,7 +192,7 @@ describeForEachAutoAdapter(
           section: { _link: null },
         },
       });
-      cy.get('[id="submit"]').click();
+      (name === SUITE_NAMES.POLARIS_WC ? cy.get("s-button[id=submit]") : cy.get('[id="submit"]')).click(clickOptions);
       cy.wait("@updateWidget");
     });
   }

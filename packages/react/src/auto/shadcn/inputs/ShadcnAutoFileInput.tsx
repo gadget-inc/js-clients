@@ -76,7 +76,7 @@ export const makeShadcnAutoFileInput = ({
           />
         </div>
       );
-    }, [actionHintParts, validations.onlyImages?.acceptedTypes, props, onFileUpload]);
+    }, [actionHintParts, validations.onlyImages?.acceptedTypes, props, onFileUpload, isFilePickerOpen]);
 
     const inputLabel = props.label ?? (
       <div style={{ display: "flex", gap: "4px" }}>
