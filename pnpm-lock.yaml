@@ -97,8 +97,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.17.23
+        version: 4.17.23
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -531,8 +531,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.4
       lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.17.23
+        version: 4.17.23
       lucide-react:
         specifier: ^0.471.0
         version: 0.471.0(react@19.1.1)
@@ -5463,7 +5463,7 @@ packages:
     dependencies:
       '@pollyjs/adapter': 6.0.6
       '@pollyjs/utils': 6.0.6
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       nock: 13.5.4
     transitivePeerDependencies:
       - supports-color
@@ -5492,7 +5492,7 @@ packages:
       blueimp-md5: 2.19.0
       fast-json-stable-stringify: 2.1.0
       is-absolute-url: 3.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       loglevel: 1.8.1
       route-recognizer: 0.3.4
       slugify: 1.6.6
@@ -5529,7 +5529,7 @@ packages:
       '@types/set-cookie-parser': 2.4.7
       bowser: 2.11.0
       fast-json-stable-stringify: 2.1.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       set-cookie-parser: 2.6.0
       utf8-byte-length: 1.0.4
     dev: true
@@ -13308,8 +13308,8 @@ packages:
       p-locate: 5.0.0
     dev: true
 
-  /lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+  /lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
     dev: true
 
   /lodash.once@4.1.1:
