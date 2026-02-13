@@ -293,7 +293,7 @@ importers:
         version: link:../core
       '@urql/preact':
         specifier: ^5.0.0
-        version: 5.0.0(@urql/core@6.0.1)(preact@10.27.2)
+        version: 5.0.0(@urql/core@6.0.1)(preact@10.28.3)
       fast-deep-equal:
         specifier: ^3.1.3
         version: 3.1.3
@@ -303,10 +303,10 @@ importers:
         version: 6.8.0
       '@testing-library/preact':
         specifier: ^3.2.4
-        version: 3.2.4(preact@10.27.2)
+        version: 3.2.4(preact@10.28.3)
       preact:
-        specifier: ^10.27.2
-        version: 10.27.2
+        specifier: ^10.28.3
+        version: 10.28.3
 
   packages/react:
     dependencies:
@@ -680,7 +680,7 @@ importers:
         version: link:../react
       '@testing-library/preact':
         specifier: ^3.2.4
-        version: 3.2.4(preact@10.27.2)
+        version: 3.2.4(preact@10.28.3)
       '@types/react':
         specifier: ^19.1.1
         version: 19.1.10
@@ -691,8 +691,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       preact:
-        specifier: ^10.27.2
-        version: 10.27.2
+        specifier: ^10.28.3
+        version: 10.28.3
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -8200,14 +8200,14 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/preact@3.2.4(preact@10.27.2):
+  /@testing-library/preact@3.2.4(preact@10.28.3):
     resolution: {integrity: sha512-F+kJ243LP6VmEK1M809unzTE/ijg+bsMNuiRN0JEDIJBELKKDNhdgC/WrUSZ7klwJvtlO3wQZ9ix+jhObG07Fg==}
     engines: {node: '>= 12'}
     peerDependencies:
       preact: '>=10 || ^10.0.0-alpha.0 || ^10.0.0-beta.0'
     dependencies:
       '@testing-library/dom': 8.20.1
-      preact: 10.27.2
+      preact: 10.28.3
     dev: true
 
   /@testing-library/react@16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.7)(@types/react@19.1.10)(react-dom@19.1.1)(react@19.1.1):
@@ -8588,14 +8588,14 @@ packages:
       - graphql
     dev: false
 
-  /@urql/preact@5.0.0(@urql/core@6.0.1)(preact@10.27.2):
+  /@urql/preact@5.0.0(@urql/core@6.0.1)(preact@10.28.3):
     resolution: {integrity: sha512-mGQQB9vfRHRGZb+U5le6ZwlblIMNOZSQCOwnABCMEY0LNM79N6pvoih/KOs/kwwAd7jrHMDk74q9TsgdrmyWEw==}
     peerDependencies:
       '@urql/core': ^6.0.0
       preact: '>= 10.0.0'
     dependencies:
       '@urql/core': 6.0.1(graphql@16.11.0)
-      preact: 10.27.2
+      preact: 10.28.3
       wonka: 6.3.2
     dev: false
 
@@ -14982,8 +14982,8 @@ packages:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  /preact@10.27.2:
-    resolution: {integrity: sha512-5SYSgFKSyhCbk6SrXyMpqjb5+MQBgfvEKE/OC+PujcY34sOpqtr+0AZQtPYx5IA6VxynQ7rUPCtKzyovpj9Bpg==}
+  /preact@10.28.3:
+    resolution: {integrity: sha512-tCmoRkPQLpBeWzpmbhryairGnhW9tKV6c6gr/w+RhoRoKEJwsjzipwp//1oCpGPOchvSLaAPlpcJi9MwMmoPyA==}
 
   /preferred-pm@3.1.4:
     resolution: {integrity: sha512-lEHd+yEm22jXdCphDrkvIJQU66EuLojPPtvZkpKIkiD+l0DMThF/niqZKJSoU8Vl7iuvtmzyMhir9LdVy5WMnA==}
