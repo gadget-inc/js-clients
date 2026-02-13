@@ -150,7 +150,7 @@
     "react-dom": "^19.1.1",
     "setup-polly-jest": "^0.11.0",
     "sonner": "^2.0.1",
-    "storybook": "^8.6.14",
+    "storybook": "^8.6.15",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.7",
     "tmp": "^0.2.3",
