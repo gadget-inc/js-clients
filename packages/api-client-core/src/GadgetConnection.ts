@@ -293,7 +293,10 @@ export class GadgetConnection {
   };
 
   close() {
-    if (this.baseSubscriptionClient) this.disposeClient(this.baseSubscriptionClient);
+    if (this.baseSubscriptionClient) {
+      this.disposeClient(this.baseSubscriptionClient);
+      this.baseSubscriptionClient = undefined;
+    }
     if (this.currentTransaction) {
       this.currentTransaction.close();
     }
@@ -360,7 +363,10 @@ export class GadgetConnection {
       throw new Error("Can't reset clients while a transaction is open");
     }
 
-    if (this.baseSubscriptionClient) this.disposeClient(this.baseSubscriptionClient);
+    if (this.baseSubscriptionClient) {
+      this.disposeClient(this.baseSubscriptionClient);
+      this.baseSubscriptionClient = undefined;
+    }
     if (this.baseClient) this.baseClient = this.newBaseClient();
   }
 
