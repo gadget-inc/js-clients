@@ -9,6 +9,7 @@ interface Window {
       redirectToOauth: boolean;
       isAuthenticated: boolean;
       missingScopes: string[];
+      isAppPlatform?: boolean;
     };
   };
 }

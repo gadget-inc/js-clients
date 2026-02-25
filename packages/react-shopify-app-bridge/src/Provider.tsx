@@ -36,6 +36,7 @@ const FetchOrInstallShopMutation = `
         isAuthenticated
         redirectToOauth
         missingScopes
+        isAppPlatform
       }
     }
   }
@@ -98,6 +99,7 @@ const InnerGadgetProvider = memo(
     let redirectToOauth = false;
     let isAuthenticated = false;
     let missingScopes: string[] = useMemo(() => [], []);
+    let isAppPlatform = false;
     const hasFetchedOrInstalledShop = useRef(false);
     const hasStartedFetchingOrInstallingShop = useRef(false);
 
@@ -107,17 +109,21 @@ const InnerGadgetProvider = memo(
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
       useMutation<{
-        shopifyConnection?: { fetchOrInstallShop?: { redirectToOauth: boolean; isAuthenticated: boolean; missingScopes: string[] } };
+        shopifyConnection?: {
+          fetchOrInstallShop?: { redirectToOauth: boolean; isAuthenticated: boolean; missingScopes: string[]; isAppPlatform: boolean };
+        };
       }>(FetchOrInstallShopMutation);
 
     if (fetchOrInstallShopData?.shopifyConnection?.fetchOrInstallShop) {
       redirectToOauth = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.redirectToOauth;
       isAuthenticated = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAuthenticated;
       missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
+      isAppPlatform = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAppPlatform ?? false;
     } else if (shopifyInstallState) {
       redirectToOauth = shopifyInstallState.redirectToOauth;
       isAuthenticated = shopifyInstallState.isAuthenticated;
       missingScopes = shopifyInstallState.missingScopes ?? [];
+      isAppPlatform = shopifyInstallState.isAppPlatform ?? false;
     }
 
     // we want to show the loading state until we've started fetching or installing the shop
@@ -213,11 +219,12 @@ const InnerGadgetProvider = memo(
         const event = new CustomEvent("gadget:devharness:rsab.shopifyManagedInstallation.missingScopes", {
           detail: {
             missingScopes,
+            isAppPlatform,
           },
         });
         globalThis.dispatchEvent(event);
       }
-    }, [redirectToOauth, missingScopes]);
+    }, [redirectToOauth, missingScopes, isAppPlatform]);
 
     return <GadgetAuthContext.Provider value={contextValue}>{children}</GadgetAuthContext.Provider>;
   }

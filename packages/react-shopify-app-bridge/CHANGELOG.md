@@ -1,5 +1,11 @@
 # @gadgetinc/react-shopify-app-bridge
 
+## 0.21.3
+
+### Patch Changes
+
+- Add isAppPlatform to fetchOrInstallShop mutation and missingScopes event
+
 ## 0.18.7
 
 ### Patch Changes
