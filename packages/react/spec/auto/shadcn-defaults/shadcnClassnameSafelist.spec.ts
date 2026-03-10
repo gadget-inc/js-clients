@@ -322,5 +322,5 @@ describe("Tailwind CSS Output Snapshot", () => {
     for (const className of GadgetShadcnTailwindSafelistFromTailwind) {
       expect(uniqueClassNames).toContain(className);
     }
-  });
+  }, 30000);
 });

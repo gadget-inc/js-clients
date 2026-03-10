@@ -26,6 +26,8 @@ export type BulkActionOption = {
   selectModelAction?: () => void;
   apiIdentifier: string;
   action?: (records: any[]) => any;
+  /** The full action details for Gadget model actions. Undefined for custom callback actions. */
+  modelActionDetails?: ModelActionDetails;
 };
 
 export const useTableBulkActions = (props: {
@@ -80,6 +82,7 @@ const getModelActionsForTableAsBulkActionOptions = (props: {
       apiIdentifier: lowercaseFirstChar(removeBulkPrefix(actionDetails.apiIdentifier)), // `bulk` prefix removed
       promoted: true,
       isDeleter: "isDeleter" in actionDetails ? actionDetails.isDeleter : false,
+      modelActionDetails: actionDetails,
     }));
 };
 

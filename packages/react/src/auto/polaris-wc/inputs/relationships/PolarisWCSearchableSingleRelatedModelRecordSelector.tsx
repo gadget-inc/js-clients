@@ -70,9 +70,7 @@ export const PolarisWCSearchableSingleRelatedModelRecordSelector = (props: {
         options={searchFilterOptions}
         records={records}
         onSelect={(record) => {
-          if (record.id! == "add-new-record") {
-            setValue(path, { ...record, _link: record.id });
-          }
+          setValue(path, { ...record, _link: record.id });
           setSearchOpen(false);
         }}
         isLoading={isLoading}

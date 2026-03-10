@@ -1,6 +1,7 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
 import { ActionErrorMessage, ActionSuccessMessage } from "../../../../src/auto/hooks/useTableBulkActions.js";
+import { MORE_ACTIONS_LABEL } from "../../../../src/auto/polaris-wc/tableComponents/PolarisWCAutoTableBulkActionSelector.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
@@ -69,7 +70,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
     }
 
     if (name === SUITE_NAMES.POLARIS_WC) {
-      cy.contains("s-button", "Actions...").click({ force: true });
+      cy.contains("s-button", MORE_ACTIONS_LABEL).click({ force: true });
     } else {
       cy.get(`button[aria-label="More actions"]`).click({ multiple: true, force: true });
     }
