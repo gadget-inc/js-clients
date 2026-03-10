@@ -1,37 +1,41 @@
 import React, { useMemo } from "react";
 import {
   getRunActionConfirmationText,
-  useAutoTableBulkActionModal,
   useGadgetBulkActionModalContent,
-  type AutoBulkActionModal,
   type GadgetBulkActionModalContentProps,
+  type ModelActionDetails,
 } from "../../hooks/useTableBulkActions.js";
+import { humanizeCamelCase } from "../../../utils.js";
 import { PolarisWCModal } from "../commonComponents/PolarisWCModal.js";
 
-export const PolarisWCAutoBulkActionModal = (props: AutoBulkActionModal) => {
-  const { model, modelActionDetails, ids } = props;
+export type PolarisWCAutoBulkActionModalProps = {
+  model: any;
+  modelActionDetails: ModelActionDetails;
+  ids: string[];
+  clearSelection: () => void;
+  modalId: string;
+};
 
-  const { actionIsLoaded, closeAndClear, close, isBulkGadgetAction, modalTitle, showModal } = useAutoTableBulkActionModal(props);
+export const PolarisWCAutoBulkActionModal = (props: PolarisWCAutoBulkActionModalProps) => {
+  const { model, modelActionDetails, ids, clearSelection, modalId } = props;
 
-  if (!actionIsLoaded || !isBulkGadgetAction || !modelActionDetails) {
-    return null;
-  }
+  const modalTitle = useMemo(
+    () => humanizeCamelCase(modelActionDetails.apiIdentifier).replace("Bulk ", ""),
+    [modelActionDetails.apiIdentifier]
+  );
 
   return (
-    <PolarisWCModal
-      open={showModal}
-      onOpenChange={(open) => {
-        if (!open) close();
-      }}
-      heading={modalTitle}
-    >
-      <GadgetBulkActionModalContent
-        model={model}
-        modelActionDetails={modelActionDetails}
-        actionLabel={modalTitle}
-        ids={ids}
-        close={closeAndClear}
-      />
+    <PolarisWCModal id={modalId} heading={modalTitle}>
+      <s-box padding="base">
+        <GadgetBulkActionModalContent
+          model={model}
+          modelActionDetails={modelActionDetails}
+          actionLabel={modalTitle}
+          ids={ids}
+          close={clearSelection}
+          modalId={modalId}
+        />
+      </s-box>
     </PolarisWCModal>
   );
 };
@@ -39,8 +43,8 @@ export const PolarisWCAutoBulkActionModal = (props: AutoBulkActionModal) => {
 /**
  * Modal content for executing Gadget bulk actions
  */
-const GadgetBulkActionModalContent = (props: GadgetBulkActionModalContentProps) => {
-  const { ids, close } = props;
+const GadgetBulkActionModalContent = (props: GadgetBulkActionModalContentProps & { modalId: string }) => {
+  const { ids, close, modalId } = props;
   const { hasRun, actionResultMessage, fetching, hasError, runAction } = useGadgetBulkActionModalContent(props);
 
   return (
@@ -59,7 +63,7 @@ const GadgetBulkActionModalContent = (props: GadgetBulkActionModalContentProps) 
 
       <s-box>
         <s-stack direction="inline" gap="small" justifyContent="end">
-          <s-button variant="secondary" onClick={close}>
+          <s-button variant="secondary" commandFor={modalId} command="--hide" onClick={close}>
             Close
           </s-button>
           {((!hasError && !hasRun) || fetching) && (

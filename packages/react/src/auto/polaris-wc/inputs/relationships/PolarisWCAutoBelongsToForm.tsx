@@ -33,8 +33,6 @@ export const PolarisWCAutoBelongsToForm = autoRelationshipForm((props: AutoRelat
 
   const {
     record,
-    actionsOpen,
-    isEditing,
     setActionsOpen,
     setIsEditing,
     pathPrefix,
@@ -74,7 +72,10 @@ export const PolarisWCAutoBelongsToForm = autoRelationshipForm((props: AutoRelat
     setIsEditing(false);
   }, [setIsEditing]);
 
-  const menuId = useId();
+  const rawId = useId();
+  const menuId = `related-record-menu-${rawId.replace(/:/g, "")}`;
+  const modalId = `belongs-to-modal-${rawId.replace(/:/g, "")}`;
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -82,9 +83,11 @@ export const PolarisWCAutoBelongsToForm = autoRelationshipForm((props: AutoRelat
           {props.label ?? <s-text>{parentName}</s-text>}
           {hasRecord && (
             <>
-              <s-button commandFor={`related-record-menu-${menuId}`} icon="menu-vertical" variant="tertiary" />
-              <s-menu id={`related-record-menu-${menuId}`} accessibilityLabel="Customer actions">
-                <s-button onClick={handleEdit}>Edit {parentName.toLocaleLowerCase()}</s-button>
+              <s-button commandFor={menuId} icon="menu-vertical" variant="tertiary" />
+              <s-menu id={menuId} accessibilityLabel="Customer actions">
+                <s-button commandFor={modalId} onClick={handleEdit} command="--show">
+                  Edit {parentName.toLocaleLowerCase()}
+                </s-button>
                 <s-button onClick={handleRemove} tone="critical">
                   Remove {parentName.toLocaleLowerCase()}
                 </s-button>
@@ -108,7 +111,7 @@ export const PolarisWCAutoBelongsToForm = autoRelationshipForm((props: AutoRelat
         )}
       </div>
 
-      <PolarisWCModal open={isEditing} onOpenChange={(open) => !open && setIsEditing(false)} heading={`Add ${parentName}`}>
+      <PolarisWCModal id={modalId} heading={`Add ${parentName}`} onClose={handleCancel}>
         <RelationshipContext.Provider
           value={{
             transformPath: (path) => pathPrefix + "." + path,
@@ -125,10 +128,10 @@ export const PolarisWCAutoBelongsToForm = autoRelationshipForm((props: AutoRelat
               gap: "8px",
             }}
           >
-            <s-button variant="secondary" onClick={handleCancel}>
+            <s-button variant="secondary" commandFor={modalId} command="--hide" onClick={handleCancel}>
               Cancel
             </s-button>
-            <s-button variant="primary" onClick={handleSave}>
+            <s-button variant="primary" commandFor={modalId} command="--hide" onClick={handleSave}>
               Save
             </s-button>
           </div>

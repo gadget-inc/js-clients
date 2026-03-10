@@ -1,20 +1,21 @@
 import type { GadgetRecord } from "@gadgetinc/core";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useId, useMemo } from "react";
 import type { TableRow } from "../../../use-table/types.js";
 import type { RecordSelection } from "../../../useSelectedRecordsController.js";
 import { getBulkActionOptionCallback, type BulkActionOption } from "../../hooks/useTableBulkActions.js";
-import { PolarisWCPopover } from "../commonComponents/PolarisWCPopover.js";
 
-const MORE_ACTIONS_LABEL = "Actions...";
+const MORE_ACTIONS_LABEL = "Actions";
+
+export type ActionModalIds = Record<string, string>;
 
 function PolarisWCBulkActionButton(props: {
   action: BulkActionOption;
   selectedRows: TableRow[];
   clearSelection: () => void;
   rawRecords: GadgetRecord<any>[] | null;
+  actionModalIds: ActionModalIds;
 }) {
-  const { action, selectedRows, clearSelection, rawRecords } = props;
-  const ref = useRef<HTMLElement>(null);
+  const { action, selectedRows, clearSelection, rawRecords, actionModalIds } = props;
   const onAction = getBulkActionOptionCallback({
     option: action,
     selectedRows,
@@ -22,28 +23,17 @@ function PolarisWCBulkActionButton(props: {
     rawRecords,
   });
 
+  const isGadgetAction = action.selectModelAction !== undefined;
+  const modalId = actionModalIds[action.apiIdentifier];
   const destructive = "isDeleter" in action ? action.isDeleter : false;
   return (
-    <s-button ref={ref as any} variant={"secondary"} tone={destructive ? "critical" : "neutral"} onClick={onAction}>
+    <s-button
+      variant={"secondary"}
+      tone={destructive ? "critical" : "neutral"}
+      onClick={isGadgetAction ? undefined : onAction}
+      {...(isGadgetAction && modalId ? { commandFor: modalId } : {})}
+    >
       {action.humanizedName}
-    </s-button>
-  );
-}
-
-function PolarisWCMoreActionsTrigger(props: { open: boolean; onToggle: () => void }) {
-  const { open, onToggle } = props;
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.addEventListener("click", onToggle);
-    return () => el.removeEventListener("click", onToggle);
-  }, [onToggle]);
-
-  return (
-    <s-button ref={ref as any} variant="secondary" aria-expanded={open} aria-label={MORE_ACTIONS_LABEL}>
-      {MORE_ACTIONS_LABEL}
     </s-button>
   );
 }
@@ -53,24 +43,22 @@ function NonPromotedActionsDropdown(props: {
   selection: RecordSelection;
   rows: TableRow[];
   rawRecords: GadgetRecord<any>[] | null;
+  actionModalIds: ActionModalIds;
 }) {
-  const { nonPromotedActions, selection, rows, rawRecords } = props;
+  const { nonPromotedActions, selection, rows, rawRecords, actionModalIds } = props;
   const selectedRows = rows.filter((row) => selection.recordIds.includes(row.id as string));
-  const [open, setOpen] = useState(false);
+  const menuId = useId().replace(/:/g, "");
 
   if (nonPromotedActions.length === 0) {
     return null;
   }
 
   return (
-    <PolarisWCPopover
-      open={open}
-      onClose={() => setOpen(false)}
-      anchor={<PolarisWCMoreActionsTrigger open={open} onToggle={() => setOpen((prev) => !prev)} />}
-      contentProps={{ style: { minWidth: "260px" } }}
-      position="below-end"
-    >
-      <div style={{ display: "flex", flexDirection: "column", minWidth: "260px" }}>
+    <>
+      <s-button commandFor={menuId} variant="secondary">
+        {MORE_ACTIONS_LABEL}
+      </s-button>
+      <s-menu id={menuId} accessibilityLabel={MORE_ACTIONS_LABEL}>
         {nonPromotedActions.map((action) => (
           <NonPromotedActionItem
             key={action.humanizedName}
@@ -78,19 +66,11 @@ function NonPromotedActionsDropdown(props: {
             selectedRows={selectedRows}
             clearSelection={selection.clearAll}
             rawRecords={rawRecords}
-            onSelect={() => {
-              setOpen(false);
-              const callback = getBulkActionOptionCallback({
-                option: action,
-                selectedRows,
-                clearSelection: selection.clearAll,
-                rawRecords,
-              });
-            }}
+            actionModalIds={actionModalIds}
           />
         ))}
-      </div>
-    </PolarisWCPopover>
+      </s-menu>
+    </>
   );
 }
 
@@ -99,9 +79,9 @@ function NonPromotedActionItem(props: {
   selectedRows: TableRow[];
   clearSelection: () => void;
   rawRecords: GadgetRecord<any>[] | null;
-  onSelect: () => void;
+  actionModalIds: ActionModalIds;
 }) {
-  const { action, selectedRows, clearSelection, rawRecords, onSelect } = props;
+  const { action, selectedRows, clearSelection, rawRecords, actionModalIds } = props;
   const callback = getBulkActionOptionCallback({
     option: action,
     selectedRows,
@@ -109,35 +89,22 @@ function NonPromotedActionItem(props: {
     rawRecords,
   });
 
-  const handleClick = () => {
-    callback();
-    onSelect();
-  };
+  const isGadgetAction = action.selectModelAction !== undefined;
+  const modalId = actionModalIds[action.apiIdentifier];
+  const destructive = "isDeleter" in action ? action.isDeleter : false;
+
+  if (isGadgetAction && modalId) {
+    return (
+      <s-button variant="tertiary" tone={destructive ? "critical" : undefined} commandFor={modalId} command="--show">
+        {action.humanizedName}
+      </s-button>
+    );
+  }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      style={{
-        display: "block",
-        width: "100%",
-        padding: "8px 12px",
-        textAlign: "left",
-        border: "none",
-        background: "transparent",
-        cursor: "pointer",
-        fontSize: "14px",
-        color: "var(--p-color-text, #202223)",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--p-color-bg-surface-hover, #f6f6f7)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent";
-      }}
-    >
+    <s-button variant="tertiary" tone={destructive ? "critical" : undefined} onClick={callback}>
       {action.humanizedName}
-    </button>
+    </s-button>
   );
 }
 
@@ -146,8 +113,9 @@ export function PolarisWCAutoTableBulkActionSelector(props: {
   selection: RecordSelection;
   rows: TableRow[];
   rawRecords: GadgetRecord<any>[] | null;
+  actionModalIds: ActionModalIds;
 }) {
-  const { bulkActionOptions, selection, rows, rawRecords } = props;
+  const { bulkActionOptions, selection, rows, rawRecords, actionModalIds } = props;
   const selectedRows = rows.filter((row) => selection.recordIds.includes(row.id as string));
 
   const { promotedActions, nonPromotedActions } = useMemo(() => {
@@ -172,9 +140,16 @@ export function PolarisWCAutoTableBulkActionSelector(props: {
           selectedRows={selectedRows}
           clearSelection={selection.clearAll}
           rawRecords={rawRecords}
+          actionModalIds={actionModalIds}
         />
       ))}
-      <NonPromotedActionsDropdown nonPromotedActions={nonPromotedActions} selection={selection} rows={rows} rawRecords={rawRecords} />
+      <NonPromotedActionsDropdown
+        nonPromotedActions={nonPromotedActions}
+        selection={selection}
+        rows={rows}
+        rawRecords={rawRecords}
+        actionModalIds={actionModalIds}
+      />
     </>
   );
 }

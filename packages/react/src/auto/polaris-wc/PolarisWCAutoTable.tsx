@@ -2,7 +2,7 @@ import type { OptionsType } from "@gadgetinc/client-hooks";
 import type { FindManyFunction, GadgetRecord } from "@gadgetinc/core";
 import pluralize from "pluralize";
 import type { ReactNode } from "react";
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { TableRow } from "../../use-table/types.js";
 import { SelectionType } from "../../useSelectedRecordsController.js";
 import { useTable } from "../../useTable.js";
@@ -14,7 +14,7 @@ import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { defaultCellStyle } from "../shared/defaultTableCellStyle.js";
 import { PolarisWCAutoTableCellRenderer } from "./tableCells/PolarisWCAutoTableCellRenderer.js";
 import { PolarisWCAutoBulkActionModal } from "./tableComponents/PolarisWCAutoBulkActionModal.js";
-import { PolarisWCAutoTableBulkActionSelector } from "./tableComponents/PolarisWCAutoTableBulkActionSelector.js";
+import { PolarisWCAutoTableBulkActionSelector, type ActionModalIds } from "./tableComponents/PolarisWCAutoTableBulkActionSelector.js";
 import { SortableTableHeader } from "./tableComponents/PolarisWCAutoTableHeaders.js";
 
 const PolarisWCSkeletonTable = (props: { columns: number }) => {
@@ -143,11 +143,28 @@ const PolarisWCAutoTableComponent = <
     [onClick]
   );
 
-  const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({
+  const { bulkActionOptions } = useTableBulkActions({
     model: props.model,
     actions: props.actions,
     excludeActions: props.excludeActions,
   });
+
+  const rawModalIdPrefix = useId();
+  const modalIdPrefix = `bulk-action-modal-${rawModalIdPrefix.replace(/:/g, "")}`;
+
+  // Build a stable mapping of apiIdentifier -> modalId for each Gadget bulk action
+  const actionModalIds: ActionModalIds = useMemo(() => {
+    const ids: ActionModalIds = {};
+    for (const option of bulkActionOptions) {
+      if (option.selectModelAction) {
+        ids[option.apiIdentifier] = `${modalIdPrefix}-${option.apiIdentifier}`;
+      }
+    }
+    return ids;
+  }, [bulkActionOptions, modalIdPrefix]);
+
+  // Gadget bulk action options that need their own modal
+  const gadgetBulkActionOptions = useMemo(() => bulkActionOptions.filter((option) => option.selectModelAction), [bulkActionOptions]);
 
   const resourceName = props.resourceName ?? {
     singular: metadata?.name ?? "",
@@ -231,6 +248,7 @@ const PolarisWCAutoTableComponent = <
                       selection={selection}
                       rows={rows ?? []}
                       rawRecords={rawRecords}
+                      actionModalIds={actionModalIds}
                     />
                   </div>
                 )}
@@ -311,12 +329,16 @@ const PolarisWCAutoTableComponent = <
           )}
         </div>
 
-        <PolarisWCAutoBulkActionModal
-          model={props.model}
-          modelActionDetails={selectedModelActionDetails}
-          ids={selection.recordIds}
-          clearSelection={selection.clearAll}
-        />
+        {gadgetBulkActionOptions.map((option) => (
+          <PolarisWCAutoBulkActionModal
+            key={option.apiIdentifier}
+            model={props.model}
+            modelActionDetails={option.modelActionDetails!}
+            ids={selection.recordIds}
+            clearSelection={selection.clearAll}
+            modalId={actionModalIds[option.apiIdentifier]}
+          />
+        ))}
 
         {/* Pagination */}
         {paginate && (page.hasNextPage || page.hasPreviousPage) && (
