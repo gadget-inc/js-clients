@@ -46,6 +46,39 @@ export const getTableSpec = (
     );
   }
 
+  // Validate sortByField on custom cell columns early so errors surface on first render
+  if (columns) {
+    for (const column of columns) {
+      if (isCustomCellColumn(column) && column.sortByField) {
+        if (column.sortByField.includes(".")) {
+          throw new Error(
+            `Field path '${column.sortByField}' on custom column '${column.header}' cannot be a relationship path. Sorting through relationships is not supported.`
+          );
+        }
+
+        const fieldMetadata = maybeGetFieldMetadataByColumnPath(spec.fieldMetadataTree, column.sortByField);
+        if (!fieldMetadata) {
+          throw new Error(
+            `Field '${column.sortByField}' specified as sortByField on custom column '${column.header}' does not exist in the model`
+          );
+        }
+
+        if (isRelationshipField(fieldMetadata)) {
+          throw new Error(
+            `Field '${column.sortByField}' on custom column '${column.header}' is a relationship field and cannot be used for sorting`
+          );
+        }
+
+        // Validate sortable: true on a non-sortable field
+        isColumnSortable({
+          fieldMetadata: { ...fieldMetadata, apiIdentifier: column.sortByField },
+          sortable: column.sortable,
+          isRelationshipField: false,
+        });
+      }
+    }
+  }
+
   return spec;
 };
 
@@ -152,12 +185,27 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
   for (const [i, targetColumn] of spec.targetColumns.entries()) {
     if (isCustomCellColumn(targetColumn)) {
       const identifier = crypto.randomUUID();
+
+      // Determine sortability based on field metadata (validation already done in getTableSpec)
+      let sortable = false;
+      if (targetColumn.sortByField) {
+        const fieldMetadata = maybeGetFieldMetadataByColumnPath(spec.fieldMetadataTree, targetColumn.sortByField);
+        if (fieldMetadata) {
+          sortable = isColumnSortable({
+            fieldMetadata: { ...fieldMetadata, apiIdentifier: targetColumn.sortByField },
+            sortable: targetColumn.sortable,
+            isRelationshipField: false,
+          });
+        }
+      }
+
       columns.push({
         identifier,
         render: targetColumn.render,
         header: targetColumn.header,
         type: "CustomRenderer",
-        sortable: false,
+        sortable,
+        sortByField: targetColumn.sortByField,
         style: targetColumn.style,
       });
 

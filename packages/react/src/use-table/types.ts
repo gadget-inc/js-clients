@@ -47,6 +47,8 @@ export type TableColumn = {
       type: "CustomRenderer";
       /** Custom render function */
       render: CustomCellRenderer;
+      /** Optional field path that this custom column sorts by */
+      sortByField?: string;
     }
 );
 
@@ -161,6 +163,17 @@ export type RelatedFieldColumn = {
 export type CustomCellColumn = {
   header: ReactNode;
   render: CustomCellRenderer;
+  /**
+   * Optional field API identifier to enable sorting for this custom column.
+   * When provided, the column will be sortable by this field.
+   * The field must exist in the model, be a sortable field type, and not be a relationship path.
+   */
+  sortByField?: string;
+  /**
+   * Whether the column should be sortable. Only applies when `sortByField` is provided.
+   * Defaults to true if the field is sortable in the model metadata.
+   */
+  sortable?: boolean;
   style?: React.CSSProperties;
 };
 
