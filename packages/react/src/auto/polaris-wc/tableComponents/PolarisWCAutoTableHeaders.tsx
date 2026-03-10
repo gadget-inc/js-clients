@@ -9,9 +9,9 @@ export const SortableTableHeader = (props: { column: TableColumn; isPrimary: boo
   const { column, isPrimary, sort } = props;
   const ref = useRef<HTMLElement>(null);
 
-  const columnField = column.type === "CustomRenderer" ? column.sortByField : column.field;
-  const isSorted = columnField ? sort.column === columnField : false;
-  const isSortable = column.sortable && !!columnField;
+  const columnField = column.type === "CustomRenderer" ? column.identifier : column.field;
+  const isSorted = sort.column === columnField;
+  const isSortable = column.sortable && column.type !== "CustomRenderer";
   const { handleColumnSort } = sort;
   useEffect(() => {
     const el = ref.current;

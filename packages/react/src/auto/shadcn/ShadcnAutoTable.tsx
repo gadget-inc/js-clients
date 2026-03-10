@@ -140,10 +140,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
                 variant="ghost"
                 size="sm"
                 className="cursor-pointer"
-                onClick={() => {
-                  const field = column.type === "CustomRenderer" ? column.sortByField : column.field;
-                  if (field) sort.handleColumnSort(field);
-                }}
+                onClick={() => (column.type === "CustomRenderer" ? undefined : sort.handleColumnSort(column.field))}
                 {...hoverProps}
               >
                 {ColumnHeaderLabel}
