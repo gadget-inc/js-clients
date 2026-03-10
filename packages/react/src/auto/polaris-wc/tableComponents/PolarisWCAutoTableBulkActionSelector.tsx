@@ -4,7 +4,7 @@ import type { TableRow } from "../../../use-table/types.js";
 import type { RecordSelection } from "../../../useSelectedRecordsController.js";
 import { getBulkActionOptionCallback, type BulkActionOption } from "../../hooks/useTableBulkActions.js";
 
-const MORE_ACTIONS_LABEL = "Actions";
+export const MORE_ACTIONS_LABEL = "Actions";
 
 export type ActionModalIds = Record<string, string>;
 
