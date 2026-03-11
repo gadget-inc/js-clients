@@ -1108,6 +1108,182 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
         expect(createSubscriptionClient.mock.calls[0][0].url).toEqual("/api/graphql/batch?base=whatever&foo=bar");
       });
+
+      describe("subscription client auth via connectionParams", () => {
+        test("should pass API key credentials in connectionParams", async () => {
+          const createSubscriptionClient = jest.fn() as any;
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { apiKey: "gsk-abcde" },
+            createSubscriptionClient,
+          });
+
+          connection.newSubscriptionClient();
+
+          const connectionParams = createSubscriptionClient.mock.calls[0][0].connectionParams;
+          expect(connectionParams).toBeDefined();
+          const params = await connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.APIKey);
+          expect(params.auth.key).toEqual("gsk-abcde");
+          expect(params.environment).toEqual("Development");
+        });
+
+        test("should pass browser session token in connectionParams", async () => {
+          const createSubscriptionClient = jest.fn() as any;
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { browserSession: { initialToken: "session-token-123" } },
+            createSubscriptionClient,
+          });
+
+          connection.newSubscriptionClient();
+
+          const connectionParams = createSubscriptionClient.mock.calls[0][0].connectionParams;
+          const params = await connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.BrowserSession);
+          expect(params.auth.sessionToken).toEqual("session-token-123");
+        });
+
+        test("should pass internal auth token in connectionParams", async () => {
+          const createSubscriptionClient = jest.fn() as any;
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { internal: { authToken: "internal-secret" } },
+            createSubscriptionClient,
+          });
+
+          connection.newSubscriptionClient();
+
+          const connectionParams = createSubscriptionClient.mock.calls[0][0].connectionParams;
+          const params = await connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.Internal);
+          expect(params.auth.token).toEqual("internal-secret");
+        });
+
+        test("should call custom processTransactionConnectionParams in connectionParams", async () => {
+          const createSubscriptionClient = jest.fn() as any;
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: {
+              custom: {
+                processFetch: async () => {},
+                processTransactionConnectionParams: async (params) => {
+                  params.auth.shopifySessionToken = "shopify-token-xyz";
+                },
+              },
+            },
+            createSubscriptionClient,
+          });
+
+          connection.newSubscriptionClient();
+
+          const connectionParams = createSubscriptionClient.mock.calls[0][0].connectionParams;
+          const params = await connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.Custom);
+          expect(params.auth.shopifySessionToken).toEqual("shopify-token-xyz");
+        });
+
+        test("should send anonymous auth type when no authentication is configured", async () => {
+          const createSubscriptionClient = jest.fn() as any;
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            createSubscriptionClient,
+          });
+
+          connection.newSubscriptionClient();
+
+          const connectionParams = createSubscriptionClient.mock.calls[0][0].connectionParams;
+          const params = await connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.Anonymous);
+          expect(params.auth.key).toBeUndefined();
+          expect(params.auth.sessionToken).toBeUndefined();
+          expect(params.auth.token).toBeUndefined();
+        });
+      });
+
+      describe("resetClients subscription client lifecycle", () => {
+        test("should create a fresh subscription client after enableSessionMode is called", () => {
+          const createSubscriptionClient = jest.fn().mockReturnValue({
+            dispose: jest.fn(),
+            subscribe: jest.fn(),
+          }) as any;
+
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { apiKey: "gsk-abcde" },
+            createSubscriptionClient,
+          });
+
+          // Trigger lazy creation of the subscription client
+          // Access via the public baseSubscriptionClient property (used for testing)
+          const firstClient = connection.newSubscriptionClient({ lazy: true });
+          (connection as any).baseSubscriptionClient = firstClient;
+
+          // Switch to browser session mode, which calls resetClients()
+          connection.enableSessionMode({ initialToken: "new-token" });
+
+          // baseSubscriptionClient should be cleared
+          expect(connection.baseSubscriptionClient).toBeUndefined();
+        });
+
+        test("should create a new subscription client on next getBaseSubscriptionClient after reset", async () => {
+          let callCount = 0;
+          const createSubscriptionClient = jest.fn().mockImplementation(() => {
+            callCount++;
+            return {
+              dispose: jest.fn(),
+              subscribe: jest.fn(),
+            };
+          }) as any;
+
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { apiKey: "gsk-abcde" },
+            createSubscriptionClient,
+          });
+
+          // Simulate lazy creation by setting baseSubscriptionClient
+          (connection as any).baseSubscriptionClient = connection.newSubscriptionClient({ lazy: true });
+          const initialCallCount = callCount;
+
+          // Switch auth mode, triggering resetClients
+          connection.enableSessionMode({ initialToken: "tok-123" });
+
+          // baseSubscriptionClient should be cleared so the next call creates a new one
+          expect(connection.baseSubscriptionClient).toBeUndefined();
+
+          // Now calling getBaseSubscriptionClient (via newSubscriptionClient as a proxy) should create a new client
+          // Access the private method indirectly by reading the property after it would be lazily set
+          (connection as any).getBaseSubscriptionClient();
+          expect(callCount).toBeGreaterThan(initialCallCount);
+
+          // Verify the new subscription client gets the updated auth
+          const latestCall = createSubscriptionClient.mock.calls[createSubscriptionClient.mock.calls.length - 1];
+          const params = await latestCall[0].connectionParams();
+          expect(params.auth.type).toEqual(AuthenticationMode.BrowserSession);
+          expect(params.auth.sessionToken).toEqual("tok-123");
+        });
+
+        test("close() should clear the subscription client reference", () => {
+          const createSubscriptionClient = jest.fn().mockReturnValue({
+            dispose: jest.fn(),
+            subscribe: jest.fn(),
+          }) as any;
+
+          const connection = new GadgetConnection({
+            endpoint: "https://someapp.gadget.app/api/graphql",
+            authenticationMode: { apiKey: "gsk-abcde" },
+            createSubscriptionClient,
+          });
+
+          (connection as any).baseSubscriptionClient = connection.newSubscriptionClient({ lazy: true });
+          expect(connection.baseSubscriptionClient).toBeDefined();
+
+          connection.close();
+
+          expect(connection.baseSubscriptionClient).toBeUndefined();
+        });
+      });
     }
   });
 };
