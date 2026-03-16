@@ -46,6 +46,15 @@ export const getTableSpec = (
     );
   }
 
+  // Validate sortByField on custom cell columns early so errors surface on first render
+  if (columns) {
+    for (const column of columns) {
+      if (isCustomCellColumn(column) && column.sortByField) {
+        validateSortByField(column, spec.fieldMetadataTree);
+      }
+    }
+  }
+
   return spec;
 };
 
@@ -152,12 +161,27 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
   for (const [i, targetColumn] of spec.targetColumns.entries()) {
     if (isCustomCellColumn(targetColumn)) {
       const identifier = crypto.randomUUID();
+
+      // Determine sortability based on field metadata (validation already done in getTableSpec)
+      let sortable = false;
+      if (targetColumn.sortByField) {
+        const fieldMetadata = maybeGetFieldMetadataByColumnPath(spec.fieldMetadataTree, targetColumn.sortByField);
+        if (fieldMetadata) {
+          sortable = isColumnSortable({
+            fieldMetadata: { ...fieldMetadata, apiIdentifier: targetColumn.sortByField },
+            sortable: true,
+            isRelationshipField: false,
+          });
+        }
+      }
+
       columns.push({
         identifier,
         render: targetColumn.render,
         header: targetColumn.header,
         type: "CustomRenderer",
-        sortable: false,
+        sortable,
+        sortByField: targetColumn.sortByField,
         style: targetColumn.style,
       });
 
@@ -285,6 +309,31 @@ const getCellDetailColumnByColumnValue = (column: string | CellDetailColumn): Ce
   }
 
   throw new Error(`Invalid column value: ${JSON.stringify(column)}`);
+};
+
+const validateSortByField = (column: CustomCellColumn, fieldMetadataTree: TableSpec["fieldMetadataTree"]) => {
+  const sortByField = column.sortByField!;
+
+  if (sortByField.includes(".")) {
+    throw new Error(
+      `Field path '${sortByField}' on custom column '${column.header}' cannot be a relationship path. Sorting through relationships is not supported.`
+    );
+  }
+
+  const fieldMetadata = maybeGetFieldMetadataByColumnPath(fieldMetadataTree, sortByField);
+  if (!fieldMetadata) {
+    throw new Error(`Field '${sortByField}' specified as sortByField on custom column '${column.header}' does not exist in the model`);
+  }
+
+  if (isRelationshipField(fieldMetadata)) {
+    throw new Error(`Field '${sortByField}' on custom column '${column.header}' is a relationship field and cannot be used for sorting`);
+  }
+
+  isColumnSortable({
+    fieldMetadata: { ...fieldMetadata, apiIdentifier: sortByField },
+    sortable: true,
+    isRelationshipField: false,
+  });
 };
 
 const isColumnSortable = (props: { fieldMetadata: FieldMetadata; sortable?: boolean; isRelationshipField?: boolean }) => {
