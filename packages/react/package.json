@@ -70,7 +70,7 @@
     "@gadgetinc/client-hooks": "^0.1.7",
     "@gadgetinc/core": ">=0.15.1",
     "@hookform/resolvers": "^5.2.1",
-    "@urql/core": "^6.0.1",
+    "@urql/core": "^4.3.0",
     "filesize": "^10.1.2",
     "pluralize": "^8.0.0",
     "react-fast-compare": "^3.2.2",
