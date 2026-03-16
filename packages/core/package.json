@@ -44,7 +44,7 @@
     "tiny-graphql-query-compiler": "workspace:*",
     "type-fest": ">=3.0.0",
     "typescript": "5.4.5",
-    "wonka": ">=6.0.0"
+    "wonka": ">=6.3.5"
   },
   "peerDependencies": {
     "@urql/core": ">=4.0.0"
