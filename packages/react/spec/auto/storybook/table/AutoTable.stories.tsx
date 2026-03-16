@@ -214,6 +214,7 @@ export const CustomCell: any = {
       "file",
       "hasOne",
       "hasOne.name",
+      "es",
       {
         header: "Has one number",
         field: "hasOne.someNumber",
@@ -228,6 +229,7 @@ export const CustomCell: any = {
       {
         style: { backgroundColor: "#abcdef", width: "320px", maxWidth: "320px" },
         header: "Custom cell with custom style",
+        sortByField: "str",
         render: ({ record }: { record: any }) => {
           return (
             <div>
