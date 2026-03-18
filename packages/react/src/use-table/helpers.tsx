@@ -379,18 +379,18 @@ export const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
   return isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field);
 };
 
-export const richTextSelection = {
+const richTextSelection = {
   markdown: true,
   truncatedHTML: true,
 };
 
-export const fileSelection = {
+const fileSelection = {
   url: true,
   mimeType: true,
   fileName: true,
 };
 
-export const roleAssignmentsSelection = {
+const roleAssignmentsSelection = {
   key: true,
   name: true,
 };

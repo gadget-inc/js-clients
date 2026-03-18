@@ -3,12 +3,9 @@ import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import type { FieldMetadata } from "../../../src/metadata.js";
 import {
   fieldMetadataArrayToFieldMetadataTree,
-  fileSelection,
   getTableColumns,
   getTableRows,
   getTableSelectionMap,
-  richTextSelection,
-  roleAssignmentsSelection,
 } from "../../../src/use-table/helpers.js";
 import type { RelationshipType, TableSpec } from "../../../src/use-table/types.js";
 
@@ -498,49 +495,6 @@ describe("helper functions for useTable hook", () => {
             },
           ]
         `);
-      });
-    });
-  });
-
-  describe("exported selection constants", () => {
-    it("richTextSelection should contain markdown and truncatedHTML", () => {
-      expect(richTextSelection).toEqual({
-        markdown: true,
-        truncatedHTML: true,
-      });
-    });
-
-    it("fileSelection should contain url, mimeType, and fileName", () => {
-      expect(fileSelection).toEqual({
-        url: true,
-        mimeType: true,
-        fileName: true,
-      });
-    });
-
-    it("roleAssignmentsSelection should contain key and name", () => {
-      expect(roleAssignmentsSelection).toEqual({
-        key: true,
-        name: true,
-      });
-    });
-
-    it("getTableSelectionMap uses the exported selection constants for special field types", () => {
-      const result = getTableSelectionMap({
-        targetColumns: ["description", "image", "roles"],
-        fieldMetadataTree: fieldMetadataArrayToFieldMetadataTree([
-          getSimpleFieldMetadata("Description", "description", GadgetFieldType.RichText),
-          getSimpleFieldMetadata("Image", "image", GadgetFieldType.File),
-          getSimpleFieldMetadata("Roles", "roles", GadgetFieldType.RoleAssignments),
-        ]),
-        defaultSelection: {},
-      });
-
-      expect(result).toEqual({
-        id: true,
-        description: richTextSelection,
-        image: fileSelection,
-        roles: roleAssignmentsSelection,
       });
     });
   });

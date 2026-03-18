@@ -24,30 +24,6 @@ const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeT
 
 export type FindFirstPaginationOptions = Omit<FindManyOptions, "first" | "last" | "before" | "after">;
 
-/**
- * When a user passes `{ field: true }` for a field that requires sub-selections
- * (like richText, file, or role fields), auto-expand it using the defaultSelection.
- */
-const normalizeSelection = (selection: FieldSelection, defaultSelection: FieldSelection): FieldSelection => {
-  const result: FieldSelection = {};
-  for (const [key, value] of Object.entries(selection)) {
-    const defaultValue = defaultSelection[key];
-    if (value === true && defaultValue && typeof defaultValue === "object") {
-      result[key] = defaultValue;
-    } else if (value && typeof value === "object" && defaultValue && typeof defaultValue === "object") {
-      result[key] = normalizeSelection(value as FieldSelection, defaultValue as FieldSelection);
-    } else {
-      result[key] = value;
-    }
-  }
-  return result;
-};
-
-const resolveSelection = (defaultSelection: FieldSelection, userSelection?: FieldSelection | null): FieldSelection => {
-  if (!userSelection) return defaultSelection;
-  return normalizeSelection(userSelection, defaultSelection);
-};
-
 const directivesForOptions = (options?: BaseFindOptions | null) => {
   if (options?.live) return ["@live"];
   return undefined;
@@ -65,7 +41,7 @@ export const findOneOperation = (
   if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID!", value: id });
 
   let fields = {
-    [operation]: Call(variables, fieldSelectionToQueryCompilerFields(resolveSelection(defaultSelection, options?.select), true)),
+    [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
   };
 
   fields = namespacify(namespace, fields);
@@ -129,7 +105,7 @@ export const findManyOperation = (
         pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
         edges: {
           cursor: true,
-          node: fieldSelectionToQueryCompilerFields(resolveSelection(defaultSelection, options?.select), true),
+          node: fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true),
         },
       }
     ),
@@ -200,7 +176,7 @@ export const actionOperation = (
   isBulkAction?: boolean | null,
   hasReturnType?: HasReturnType | null
 ) => {
-  const selection = resolveSelection(defaultSelection!, options?.select);
+  const selection = options?.select || defaultSelection;
 
   let fields: BuilderFieldSelection = {
     [operation]: Call(
@@ -247,7 +223,7 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
 
   switch (backgroundAction.type) {
     case "action": {
-      const selection = resolveSelection(backgroundAction.defaultSelection, options?.select);
+      const selection = options?.select || backgroundAction.defaultSelection;
 
       fields = {
         [`... on ${resultType}`]: actionResultFieldSelection(

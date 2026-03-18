@@ -22,15 +22,7 @@ import type {
   UseActionFormSubmit,
 } from "../use-action-form/types.js";
 import { isPlainObject, processDefaultValues, toDefaultValues } from "../use-action-form/utils.js";
-import {
-  fileSelection,
-  getRelatedModelFields,
-  isHasManyOrHasManyThroughField,
-  isRelationshipField,
-  pathListToSelection,
-  richTextSelection,
-  roleAssignmentsSelection,
-} from "../use-table/helpers.js";
+import { getRelatedModelFields, isHasManyOrHasManyThroughField, isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, getFlattenedObjectKeys, set } from "../utils.js";
@@ -229,7 +221,7 @@ const useFormSelection = (props: {
     if (!select || !modelApiIdentifier) {
       return;
     }
-    return forceRequiredFieldsIntoSelect({ select, rootFieldsMetadata });
+    return forceIdsIntoSelect({ select, rootFieldsMetadata });
   }, [select, modelApiIdentifier, rootFieldsMetadata]);
 
   if (!modelApiIdentifier || !fields.length) {
@@ -246,56 +238,38 @@ const useFormSelection = (props: {
   return pathListToSelection(modelApiIdentifier, paths, fieldMetaData);
 };
 
-const forceRequiredFieldsIntoSelect = (props: { select: FieldSelection; rootFieldsMetadata: FieldMetadata[] }) => {
+const forceIdsIntoSelect = (props: { select: FieldSelection; rootFieldsMetadata: FieldMetadata[] }) => {
   const { select: originalSelect, rootFieldsMetadata } = props;
   const select = structuredClone(originalSelect);
 
   select.id = true; // Always select the ID for the root model
 
-  const addRequiredFieldsToSelection = (selectPath: string, fieldMetadata: FieldMetadata) => {
-    const isRichTextField = fieldMetadata.fieldType === FieldType.RichText;
-    const isFileField = fieldMetadata.fieldType === FieldType.File;
-    const isRolesField = fieldMetadata.fieldType === FieldType.RoleAssignments;
-    const isRelationship = isRelationshipField(fieldMetadata);
+  const addIdToSelection = (selectPath: string, fieldMetadata: FieldMetadata) => {
+    if (!isRelationshipField(fieldMetadata)) {
+      return; // Non relationships do not need additional selection
+    }
 
     const existingSelection = get(select, selectPath);
-    if (!existingSelection) {
-      return; // Do not select at all
+    if (!existingSelection || typeof existingSelection !== "object") {
+      // Do not go deeper than what is defined in the select object
+      return;
     }
 
-    if (isRichTextField) {
-      return set(select, selectPath, richTextSelection); // Assume that the whole rich text is expected to be selected
-    }
+    const isManyRelation = isHasManyOrHasManyThroughField(fieldMetadata);
+    const currentFieldSelectPathPrefix = isManyRelation ? `${selectPath}.edges.node` : `${selectPath}`;
+    const idPath = `${currentFieldSelectPathPrefix}.id`;
 
-    if (isFileField) {
-      return set(select, selectPath, fileSelection); // Assume whole file is expected to be selected
-    }
-    if (isRolesField) {
-      return set(select, selectPath, roleAssignmentsSelection); // Assume whole role assignments are expected to be selected
-    }
+    set(select, idPath, true);
 
-    if (isRelationship) {
-      if (typeof existingSelection !== "object") {
-        // Do not go deeper than what is defined in the select object
-        return;
-      }
+    const relatedModelFields = getRelatedModelFields(fieldMetadata);
 
-      const isManyRelation = isHasManyOrHasManyThroughField(fieldMetadata);
-      const currentFieldSelectPathPrefix = isManyRelation ? `${selectPath}.edges.node` : `${selectPath}`;
-      const idPath = `${currentFieldSelectPathPrefix}.id`;
-
-      set(select, idPath, true);
-
-      const relatedModelFields = getRelatedModelFields(fieldMetadata);
-
-      for (const relatedModelField of relatedModelFields) {
-        addRequiredFieldsToSelection(`${currentFieldSelectPathPrefix}.${relatedModelField.apiIdentifier}`, relatedModelField);
-      }
+    for (const relatedModelField of relatedModelFields) {
+      addIdToSelection(`${currentFieldSelectPathPrefix}.${relatedModelField.apiIdentifier}`, relatedModelField);
     }
   };
 
   for (const field of rootFieldsMetadata) {
-    addRequiredFieldsToSelection(field.apiIdentifier, field);
+    addIdToSelection(field.apiIdentifier, field);
   }
 
   return select;
