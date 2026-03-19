@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/shopify-extensions",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/shopify-extensions",
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "@gadgetinc/preact": "^0.1.5",
-    "@gadgetinc/react": "^0.25.0",
+    "@gadgetinc/react": "^0.25.1",
     "preact": "^10.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

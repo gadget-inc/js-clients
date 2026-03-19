@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-bigcommerce",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-bigcommerce",
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/react": "^0.25.0"
+    "@gadgetinc/react": "^0.25.1"
   },
   "devDependencies": {
     "@gadgetinc/core": "workspace:*",
