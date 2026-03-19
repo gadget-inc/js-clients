@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.25.1
+
+### Patch Changes
+
+- Allow sorting by custom cell columns via a new `sortByField` option on `CustomCellColumn`. When `sortByField` is provided, the column becomes sortable by the specified field.
+- Fixed an issue in Polaris web components AutoTable where bulk action confirmation modals did not always close properly when rendered within the Shopify store admin
+
 ## 0.25.0
 
 ### Changes

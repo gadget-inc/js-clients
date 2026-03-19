@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-chatgpt-apps",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-chatgpt-apps",
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/react": "^0.25.0"
+    "@gadgetinc/react": "^0.25.1"
   },
   "devDependencies": {
     "@gadgetinc/core": "workspace:*",
