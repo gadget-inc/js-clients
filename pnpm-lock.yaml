@@ -631,6 +631,9 @@ importers:
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
+      '@shopify/app-bridge-react':
+        specifier: ^4.2.0
+        version: 4.2.2(react-dom@19.1.1)(react@19.1.1)
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -641,9 +644,6 @@ importers:
       '@gadgetinc/core':
         specifier: workspace:*
         version: link:../core
-      '@shopify/app-bridge-react':
-        specifier: ^4.2.0
-        version: 4.2.2(react-dom@19.1.1)(react@19.1.1)
       '@types/crypto-js':
         specifier: ^4.2.2
         version: 4.2.2
@@ -7434,11 +7434,11 @@ packages:
       '@shopify/app-bridge-types': 0.3.0
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
-    dev: true
+    dev: false
 
   /@shopify/app-bridge-types@0.3.0:
     resolution: {integrity: sha512-6LnQDfE5TP5RtlFFh/3S//9UmwS7rRsfDOHTPkZxvEZw5p+j0WfZcFnsq+ntr5Uc+xd3wZ0GZxt1GY1cm4/3bA==}
-    dev: true
+    dev: false
 
   /@shopify/app-bridge-types@0.5.3:
     resolution: {integrity: sha512-wj5pPqk4bQsFU6AQUo6SwyQ3zqBgodvxt7fWzRYakeHGG/YWeDv1uoNYjhSVm0jT80Wy18EObSMQTocUSgpqPA==}
