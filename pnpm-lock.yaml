@@ -169,8 +169,8 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1
       wonka:
-        specifier: ^6.3.2
-        version: 6.3.2
+        specifier: ^6.3.6
+        version: 6.3.6
       ws:
         specifier: ^8.18.2
         version: 8.18.2
@@ -283,8 +283,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       wonka:
-        specifier: '>=6.0.0'
-        version: 6.3.2
+        specifier: '>=6.3.6'
+        version: 6.3.6
 
   packages/preact:
     dependencies:
@@ -573,8 +573,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       wonka:
-        specifier: ^6.3.2
-        version: 6.3.2
+        specifier: ^6.3.6
+        version: 6.3.6
 
   packages/react-bigcommerce:
     dependencies:
@@ -3400,7 +3400,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3423,7 +3423,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3446,7 +3446,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3469,7 +3469,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3492,7 +3492,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3515,7 +3515,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3538,7 +3538,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3561,7 +3561,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3584,7 +3584,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3607,7 +3607,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3630,7 +3630,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -3653,7 +3653,7 @@ packages:
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
-      wonka: 6.3.2
+      wonka: 6.3.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
@@ -8806,7 +8806,7 @@ packages:
     resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
     dependencies:
       '@0no-co/graphql.web': 1.2.0(graphql@16.8.1)
-      wonka: 6.3.2
+      wonka: 6.3.6
     transitivePeerDependencies:
       - graphql
     dev: false
@@ -8815,7 +8815,7 @@ packages:
     resolution: {integrity: sha512-FZDiQk6jxbj5hixf2rEPv0jI+IZz0EqqGW8mJBEug68/zHTtT+f34guZDmyjJZyiWbj0vL165LoMr/TkeDHaug==}
     dependencies:
       '@0no-co/graphql.web': 1.2.0(graphql@16.11.0)
-      wonka: 6.3.2
+      wonka: 6.3.6
     transitivePeerDependencies:
       - graphql
 
@@ -8823,7 +8823,7 @@ packages:
     resolution: {integrity: sha512-FZDiQk6jxbj5hixf2rEPv0jI+IZz0EqqGW8mJBEug68/zHTtT+f34guZDmyjJZyiWbj0vL165LoMr/TkeDHaug==}
     dependencies:
       '@0no-co/graphql.web': 1.2.0(graphql@16.8.1)
-      wonka: 6.3.2
+      wonka: 6.3.6
     transitivePeerDependencies:
       - graphql
     dev: false
@@ -8836,7 +8836,7 @@ packages:
     dependencies:
       '@urql/core': 6.0.1(graphql@16.11.0)
       preact: 10.27.2
-      wonka: 6.3.2
+      wonka: 6.3.6
     dev: false
 
   /@vitejs/plugin-react-swc@3.11.0(vite@7.1.4):
@@ -17322,7 +17322,7 @@ packages:
     dependencies:
       '@urql/core': 6.0.1(graphql@16.8.1)
       react: 19.1.1
-      wonka: 6.3.2
+      wonka: 6.3.6
     dev: false
 
   /use-callback-ref@1.3.3(@types/react@19.1.10)(react@19.1.1):
@@ -17729,8 +17729,8 @@ packages:
       isexe: 3.1.1
     dev: true
 
-  /wonka@6.3.2:
-    resolution: {integrity: sha512-2xXbQ1LnwNS7egVm1HPhW2FyKrekolzhpM3mCwXdQr55gO+tAiY76rhb32OL9kKsW8taj++iP7C6hxlVzbnvrw==}
+  /wonka@6.3.6:
+    resolution: {integrity: sha512-MXH+6mDHAZ2GuMpgKS055FR6v0xVP3XwquxIMYXgiW+FejHQlMGlvVRZT4qMCxR+bEo/FCtIdKxwej9WV3YQag==}
 
   /word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
