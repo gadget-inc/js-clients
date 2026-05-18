@@ -155,7 +155,7 @@ importers:
         version: 5.13.1(graphql@16.8.1)
       isomorphic-ws:
         specifier: ^5.0.0
-        version: 5.0.0(ws@8.18.2)
+        version: 5.0.0(ws@8.20.1)
       klona:
         specifier: ^2.0.6
         version: 2.0.6
@@ -172,8 +172,8 @@ importers:
         specifier: ^6.3.2
         version: 6.3.2
       ws:
-        specifier: ^8.18.2
-        version: 8.18.2
+        specifier: ^8.20.1
+        version: 8.20.1
     devDependencies:
       '@types/node':
         specifier: ^22.13.14
@@ -3396,12 +3396,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3419,12 +3419,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3442,12 +3442,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3465,12 +3465,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3488,12 +3488,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3511,12 +3511,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3534,12 +3534,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3557,12 +3557,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3580,12 +3580,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3603,12 +3603,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3626,12 +3626,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3649,12 +3649,12 @@ packages:
       cross-fetch: 4.1.0
       graphql: 16.11.0
       graphql-ws: 5.16.2(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       klona: 2.0.6
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
       type-fest: 3.13.1
       wonka: 6.3.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3954,9 +3954,9 @@ packages:
       '@types/ws': 8.5.10
       graphql: 16.8.1
       graphql-ws: 5.16.2(graphql@16.8.1)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3989,9 +3989,9 @@ packages:
       '@graphql-tools/utils': 10.2.2(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4214,10 +4214,10 @@ packages:
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.9.18
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -7803,7 +7803,7 @@ packages:
       recast: 0.23.9
       semver: 7.6.2
       util: 0.12.5
-      ws: 8.18.2
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - storybook
@@ -12661,12 +12661,12 @@ packages:
     engines: {node: '>=16'}
     dev: true
 
-  /isomorphic-ws@5.0.0(ws@8.18.2):
+  /isomorphic-ws@5.0.0(ws@8.20.1):
     resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.18.2
+      ws: 8.20.1
 
   /isomorphic.js@0.2.5:
     resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
@@ -13267,7 +13267,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.18.2
+      ws: 8.20.1
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -17784,8 +17784,8 @@ packages:
       signal-exit: 4.1.0
     dev: true
 
-  /ws@8.18.2:
-    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
+  /ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
